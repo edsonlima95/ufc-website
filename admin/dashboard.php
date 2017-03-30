@@ -8,14 +8,21 @@ $login = new Logar();
 //Se não existir a sessao, retorna para o login.
 if(!$login->checkSession()):
     unset($_SESSION['user']);
-    header('Location: index.php');
+    header('Location: index.php?exe=restrito');
 endif;
 
+//Todo conteudo do admin.
 require_once('inc/header.php');
    
     echo '<div id="site">';
         //Recebe o arquivo da url.
         $exe = filter_input(INPUT_GET,'exe',FILTER_DEFAULT);
+        //Efetua o logoff.
+        if($exe == 'logoff'):
+             unset($_SESSION['user']);
+             header('Location: index.php?action=sair');
+        endif;
+       
         //Front crontol
 	funcoes::frontController($exe);
     echo '</div><!-- /site -->';

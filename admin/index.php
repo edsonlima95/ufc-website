@@ -13,9 +13,9 @@ session_start(); //Inicia a sessao.
 
         <link rel="stylesheet" type="text/css" href="css/login.css" />
         <link href='http://fonts.googleapis.com/css?family=Dosis:200;400,600,800' rel='stylesheet' type='text/css'>
-        <link rel="icon" type="image/png" href="../tpl/images/upico.png"/>
-        <script type="text/javascript" src="../jsc/jquery.js"></script>
-        <script type="text/javascript" src="jsc/login.js"></script>
+            <link rel="icon" type="image/png" href="../tpl/images/upico.png"/>
+            <script type="text/javascript" src="../jsc/jquery.js"></script>
+            <script type="text/javascript" src="jsc/login.js"></script>
     </head>
     <body>
         <?php
@@ -41,8 +41,11 @@ session_start(); //Inicia a sessao.
             </form>
 
             <?php
-            if (isset($_GET['sair'])):
+            //Verifica se é um logoff do sistema ou se o usuario nao tem permissão
+            if (isset($_GET['action']) == 'sair'):
                 echo '<div class="msg" style="display:block"><p class="sucesso"><strong>Você deslogou com sucesso!</strong></p></div>';
+            elseif (isset($_GET['exe']) == 'restrito'):
+                echo '<div class="msg" style="display:block"><p class="erro"><strong>Painel restrito!</strong></p></div>';
             endif;
             ?>
             <div class="msg"></div><!--/msg-->

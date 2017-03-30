@@ -53,7 +53,7 @@
             <li class="li"><a title="Comentários" href="dashboard.php?exe=comentarios/index" class="coms <?php if(in_array('comentarios',$acturl)) echo 'active';?>">Comentários</a></li><!--/-->
             <li class="li"><a title="Categorias" href="dashboard.php?exe=usuarios/index" class="user <?php if(in_array('usuarios',$acturl)) echo 'active';?>">Usuários</a></li><!--/-->
             <li class="li"><a title="Categorias" href="dashboard.php?exe=sis/configuracoes" class="conf <?php if(in_array('configuracoes',$acturl)) echo 'active';?>">Configurar</a></li><!--/-->
-            <li class="li"><a title="Categorias" href="dashboard.php?exe=exit" class="exit">Sair</a></li><!--/-->
+            <li class="li"><a title="Categorias" href="dashboard.php?exe=logoff" class="exit">Sair</a></li><!--/-->
         </ul><!--/controle-->
     
     <div class="clear"></div><!-- /clear -->

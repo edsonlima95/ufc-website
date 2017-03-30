@@ -1,4 +1,4 @@
-$(function(){	
+/*$(function(){	
 	tinyMCE.init({
 		// General options
 		mode : "specific_textareas",
@@ -192,4 +192,4 @@ $(function(){
 		});	
 		return false;
 	});
-});
+});*/
