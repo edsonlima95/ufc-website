@@ -1,0 +1,8 @@
+{
+    "name": "projquery",  
+    "autoload": {
+        "psr-4": {
+            "": ["app/conn","app/helper"]
+        }
+    }
+}
