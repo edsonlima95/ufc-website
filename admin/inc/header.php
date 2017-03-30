@@ -18,7 +18,7 @@
 <script type="text/javascript" src="../jsc/jquery.js"></script>
 <script type="text/javascript" src="../tpl/js/shadowbox/shadowbox.js"></script>
 <script type="text/javascript" src="jsc/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="jsc/tiny_mce/plugins/tinybrowser/tb_tinymce.js.php"></script>
+<!--<script type="text/javascript" src="jsc/tiny_mce/plugins/tinybrowser/tb_tinymce.js.php"></script>-->
 
 <script type="text/javascript" src="jsc/jquery.mask.js"></script>
 <script type="text/javascript" src="jsc/estilo.js"></script>
