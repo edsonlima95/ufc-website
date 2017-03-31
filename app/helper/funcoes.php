@@ -95,8 +95,9 @@ class funcoes {
         if (file_exists($caminho)):
             require_once ($caminho);
         else:
-            return "Erro ao tentar incluir o arquivo !";
+            $caminho = __DIR__ . DIRECTORY_SEPARATOR . '../../admin' . DIRECTORY_SEPARATOR . 'sis/404.php';
+            require_once ($caminho);
         endif;
     }
-
+    
 }
