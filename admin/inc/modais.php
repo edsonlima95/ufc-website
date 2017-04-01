@@ -3,28 +3,9 @@
     <div class="loadsistema">
         <img src="img/loader.gif" title="Carregando..." alt="Carregando">
     </div><!-- msg -->
-
-    <div class="msg accept">
-        <strong class="tt">Sucesso:</strong>
-        <p>Parabéns. Seus dados foram enviados com sucesso. Estaremos respondendo em breve.</p><p><strong>Obrigado!</strong></p>
-        <a href="#" class="closedial">X FECHAR</a>
-    </div><!-- msg -->
-
-
-    <div class="msg alert">
-        <strong class="tt">Aviso:</strong>
-        <p>Opsss. Para enviar é preciso preencher todos os campos!</p>
-        <a href="#" class="closedial">X FECHAR</a>
-    </div><!-- msg -->
-
-
-    <div class="msg error">
-        <strong class="tt">Erro:</strong>
-        <p>Opsss. Não foi possível processar sua requisição</p>
-        <a href="#" class="closedial">X FECHAR</a>
-    </div><!-- msg -->
-
-
+    
+    <div class="ajaxmsg msg"></div><!-- msg -->
+    
     <!-- NEW POST -->
     <div class="modal newpost">
         <h2>NOVO POST:</h2>

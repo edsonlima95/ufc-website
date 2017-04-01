@@ -1,7 +1,7 @@
 <?php
 
-require 'app/src/lib/class.phpmailer.php';
-require 'app/src/lib/class.smtp.php';
+require '../../app/email/class.phpmailer.php';
+require '../../app/email/class.smtp.php';
 
 class email {
 
@@ -46,7 +46,7 @@ class email {
         $this->email_remetente = $this->dados['email_remetente'];
         $this->nome_destino = $this->dados['nome_destino'];
         $this->email_destino =  $this->dados['email_destino'];
-        $this->assunto = 'assunto';
+        $this->assunto = $this->dados['assunto'];
         $this->setMsg();
     }
 
@@ -65,7 +65,7 @@ class email {
         //REMETENTE E RETORNO.
         $this->mail->From = $this->email_remetente;
         $this->mail->FromName = $this->nome_remetente;
-        $this->mail->addReplyTo($this->email_remetente, $this->nome_remetente);
+//        $this->mail->addReplyTo($this->email_remetente, $this->nome_remetente);
 
         //ASSUNTO MSG E DESTINO.
         $this->mail->Subject = $this->assunto;
@@ -75,8 +75,9 @@ class email {
 
     private function sendEmail() {
         if ($this->mail->Send()):
-            msg('Obrigado por entrar em contato, responderemos assim que possivel!', SUCCESS);
-            return true;
+            echo 1;
+        else:
+            echo 2;
         endif;
     }
 

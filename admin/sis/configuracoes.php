@@ -19,46 +19,53 @@
                 $status = $readStatus->getResultado()[0]['manutencao'];
                 ?>
                 <legend>Acesso ao site:</legend>
-                <label class="j_desativa main <?php if($status == 1): echo ' block'; endif;?>">
+                <div class="j_desativa main <?php if($status == 1): echo ' block'; endif;?>">
                     <span class="field">Modo Manutenão: <strong style="color:green">ATIVO</strong></span>
                     <input type="submit" value="DESATIVAR MANUTENÇÃO" class="btn j_config_manutencao_no" /> 
                     <img src="img/loader.gif" class="load" alt="Carregando..." title="Carregando..." />
-                </label>
+                </div>
 
-                <label class="j_ativo main <?php if($status == 0): echo ' block'; endif;?>">
+                <div class="j_ativo main <?php if($status == 0): echo ' block'; endif;?>">
                     <span class="field">Modo Manutenão: <strong style="color:red">INATIVO</strong></span>
                     <input type="submit" value="ATIVAR MANUTENÇÃO" class="btn j_config_manutencao_yes" /> 
                     <img src="img/loader.gif" class="load" alt="Carregando..." title="Carregando..." />
-                </label>
+                </div>
             </fieldset>
         </form>
 
         <!-- //FORM SERVER MAIL -->
         <form name="config_email" action="" method="post">        
+            <?php
+            //Ler a tabela de configuração de email.
+            $readEmailServer = new read();
+            $readEmailServer->ExeRead('config_emailserver');
+            $email = $readEmailServer->getResultado()[0];
+       
+            ?>
             <fieldset>
                 <legend>Email de envio:</legend>
                 <label class="label">
                     <span class="field">E-mail:</span>
-                    <input type="text" name="email" />                    
+                    <input type="text" name="email" value="<?php if(isset($email['email'])): echo $email['email']; endif; ?>" />                    
                 </label>
 
                 <label class="label">
                     <span class="field">Senha:</span>
-                    <input type="password" name="senha" />                    
+                    <input type="password" name="senha" value="<?php if(isset($email['senha'])): echo $email['senha']; endif; ?>" />              
                 </label>
 
                 <label class="label">
                     <span class="field">Porta:</span>
-                    <input type="text" name="porta" />                    
+                    <input type="text" name="porta" value="<?php if(isset($email['porta'])): echo $email['porta']; endif; ?>" />                 
                 </label>
 
                 <label class="label">
                     <span class="field">Server:</span>
-                    <input type="text" name="server" />                    
+                    <input type="text" name="server" value="<?php if(isset($email['server'])): echo $email['server']; endif; ?>" />                    
                 </label> 
 
-                <input type="submit" value="Testar Envio" class="btn teste j_config_email_teste" />
                 <input type="submit" value="Atualizar Dados" class="btn" /> 
+                <input type="button" value="Testar Envio" class="btn teste j_config_email_teste" />
                 <img src="img/loader.gif" class="load" alt="Carregando..." title="Carregando..." />           
             </fieldset>               
         </form>

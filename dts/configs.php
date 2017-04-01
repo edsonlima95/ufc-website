@@ -14,4 +14,4 @@ define('MAILHOST', 'smtp.gmail.com');
 
 
 //Ao ser chamado este arquivo de configuraão, as funcões vão ser chamadas juntas.
-require_once('functions.php');
+//require_once('functions.php');

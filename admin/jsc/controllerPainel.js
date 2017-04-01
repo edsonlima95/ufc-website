@@ -1,4 +1,4 @@
-//Ler todo o documento e depois retira o fundo preto, com o carregando.
+//Carrega toda a pagina e depois retira o fundo preto, com o carregando.
 $(window).ready(function () {
     $('.loadsistema').fadeOut('slow', function () {
         $('.dialog').fadeOut('fast');
@@ -160,14 +160,46 @@ $(function () {
         return false;
     });
 
-    //FECHA O MODAL.
-    //Fecha o modal de acordo com o id, pois tem varios modais diferentes.
+    //FECHA Os MODAIS.
+    //Recebe o valor do id que esta no fecha e fecha o modal de acordo com a classe que tiver o mesmo nome do id.
     $('.closemodal').click(function () {
-        $('.newpost').fadeOut('slow', function () {
+        var iddomodal = $(this).attr('id');
+        $('.'+iddomodal).fadeOut('slow', function () {
             $('.dialog').fadeOut('fast');
         });
     });
-
+    
+    //FECHA AS MENSAGEM.
+     $('.ajaxmsg').on('click','.j_ajaxclose',function () {
+        var iddomodal = $(this).attr('id');
+        $('.'+iddomodal).fadeOut('slow', function () {
+            $('.dialog').fadeOut('fast');
+            //Reseta a clase.
+            $(this).attr('class','ajaxmsg msg');
+        });
+        return false;
+    });
+    
+    //ABRIR AS MSG
+    /*Ao executar essa funcao o id nunca pode ser o mesmo nome.*/
+    function msg(id, tipo, conteudo) {
+        //Ternaria para validar o tipo de msg.
+        var titulo = (tipo == 'accept' ? 'Sucesso' : (tipo == 'error' ? 'Opssss' : (tipo == 'alert' ? 'Atenção' : 'null')));
+        if(titulo == 'null'){
+            alert('As mensagens devem ser do tipo accept | error | alert');
+        }else{
+            //Abri o fundo  predo da pagina.
+            $('.dialog').fadeIn('fast', function () {
+                //Apos abrir o fundo.
+                $('.ajaxmsg').addClass(id).addClass(tipo).html(
+                   '<strong class="tt">'+tipo+'</strong>'+
+                   '<p>'+ conteudo+'</p>'+
+                   '<a href="#" class="closedial j_ajaxclose" id="'+id+'">X FECHAR</a>'
+                ).fadeIn('slow');
+            });
+        }
+    }
+    
     //EFEITO DOS FORMS EM CONFIGURAÇÕES.
     //Configurações, apresentações dos formularios navegação em abas.
     $('.configs .abas_config li a').click(function () {
@@ -236,8 +268,73 @@ $(function () {
                 });
             }
         });
-
     });
-
+    
+    //Forma geral.
+    $('form').submit(function () {
+        return false;
+    });
+    
+    //CONFIGURACAO DO EMAIL-SERVER.
+    $('form[name="config_email"]').submit(function () {
+        //Encapsula o formulario e os dados.
+        var form = $(this);
+        var dados = $(this).serialize() +'&acao=mailserver_atualiza';
+        
+        //Envia os dados.
+        $.ajax({
+            url: "j_php/painel.php",
+            type: 'POST',
+            data: dados,
+            beforeSend: function () {
+                //Pego o load apenas deste formulario especifico, pois todos os form tem o mesmo load.
+                form.find('.load').fadeIn('fast');
+            },
+            success: function (res) {
+               if(res == 'branco'){
+                    msg('branco_campos_mailserver','alert','Preencha todos os campos antes de atualizar os dados!');
+               }else if(res == 'ermail'){
+                   msg('tipo_email_mailserver','error','Insira um email valido!');
+               }else {
+                   msg('sucesso_mailserver','accept','Dados atualizados com sucesso!');
+               }
+            },
+            complete: function () {
+                form.find('.load').fadeOut('fast');
+            }
+            
+        });
+        return false;
+    });
+    
+    //Testa envio.
+    $('.j_config_email_teste').click(function () {
+        //Encapsula o formulario e os dados.
+        var form = $('form[name="config_email"]');
+        
+        //Envia os dados.
+        $.ajax({
+            url: "j_php/painel.php",
+            type: 'POST',
+            data: 'acao=mailserver_testa',
+            beforeSend: function () {
+                //Pego o load apenas deste formulario especifico, pois todos os form tem o mesmo load.
+                form.find('.load').fadeIn('fast');
+            },
+            success: function (res) {
+                //Verifica a existencia da palavra error.
+               if(res){
+                    msg('testa_enviado_mailserver','accept','E-mail enviado com sucesso, verifique seu email' + res);
+               }else if (res == 2) {
+                   msg('testa_error_mailserver','error','Error ao enviar o email, por favot verifique os dados do formulario');
+               }
+            },
+            complete: function () {
+                form.find('.load').fadeOut('fast');
+            }
+            
+        });
+        return false;
+    });
 
 });
