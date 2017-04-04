@@ -63,8 +63,30 @@ switch ($dados['acao']) {
         $emailSender->enviarEmail($dados);
         
         break;
+    case 'atualiza_seo':
+        unset($dados['acao']);
+        
+        if(in_array('',$dados)):
+            echo 'branco';
+        else:
+            $id = 1;
+            $updateSeo = new update();
+            $updateSeo->ExeUpdate('config_seosociais',$dados,"WHERE id = :id","id=".$id."");
+        endif;
+        break;
+    case 'atualiza_endereco':
+        unset($dados['acao']);
+        
+        if(in_array('',$dados)):
+            echo 'branco';
+        else:
+            $id = 1;
+            $updateEndereco = new update();
+            $updateEndereco->ExeUpdate('config_endereco',$dados,"WHERE id = :id","id=".$id."");
+        endif;
+        break;
     default:
-        echo '';
+        echo 'Error';
         break;
 }
 ob_end_flush();

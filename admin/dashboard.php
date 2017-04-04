@@ -1,7 +1,24 @@
 <?php
 ob_start();
-session_start();
 require '../vendor/autoload.php';
+$readSeo = new read();
+$readSeo->ExeRead('config_seosociais');
+
+$seo = $readSeo->getResultado()[0];
+
+//Clona  objeto.
+$endereco = clone $readSeo;
+$endereco->ExeRead('config_endereco');
+
+$ende = $endereco->getResultado()[0];
+
+//Configurações do SEO
+define('SITENAME',$seo['titulo']);
+define('SITEDESC',$seo['descricao']);
+define('SITEFACE',$seo['facebook']);
+define('SITETWITTER',$seo['twitter']);
+define('ENDERECO',$ende['endereco']);
+define('TELEFONE',$ende['telefone']);
 
 $login = new Logar();
 

@@ -1,9 +1,9 @@
 <?php
+ob_flush(); //Abri o fluxo.
 require '../vendor/autoload.php';
 //Inclue os arquivos.
 require '../dts/configs.php';
-ob_flush(); //Abri o fluxo.
-session_start(); //Inicia a sessao.
+
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>

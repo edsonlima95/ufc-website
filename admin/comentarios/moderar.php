@@ -1,6 +1,8 @@
 <div class="content home">
     <h1 class="location">Moderar Comentário<span><a href="#back" title="voltar">Voltar</a></span></h1><!--/location-->
+    <?php
     
+    ?>
     <div class="commentmanage">
 		<div class="principal">
         

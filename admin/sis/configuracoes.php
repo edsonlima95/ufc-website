@@ -1,3 +1,6 @@
+<?php
+funcoes::superUser();
+?>
 <div class="content home">
     <h1 class="location">Configurações<span><?php echo date('d/m/Y H:i'); ?></span></h1><!--/location-->
 
@@ -73,26 +76,32 @@
 
         <!-- //FORM CONFIG SEO -->
         <form name="config_seo" action="" method="post">        
+            <?php
+            //Ler a tabela de configuração de seo.
+            $readSeo = new read();
+            $readSeo->ExeRead('config_seosociais');
+            $seo = $readSeo->getResultado()[0];
+            ?>
             <fieldset>
                 <legend>SEO/Social:</legend>
                 <label class="label">
                     <span class="field">Titulo:</span>
-                    <input type="text" name="title" />                    
+                    <input type="text" name="titulo" value="<?php if(isset($seo['titulo'])): echo $seo['titulo']; endif; ?>" />                   
                 </label>
 
                 <label class="label">
                     <span class="field">Descrição:</span>
-                    <textarea name="descricao" rows="5"></textarea>                 
+                    <textarea name="descricao" rows="5"><?php if(isset($seo['descricao'])): echo $seo['descricao']; endif; ?></textarea>                 
                 </label>
 
                 <label class="label">
                     <span class="field">Facebook:</span>
-                    <input type="text" name="facebook" />                    
+                    <input type="text" name="facebook" value="<?php if(isset($seo['facebook'])): echo $seo['facebook']; endif; ?>" />                       
                 </label>
 
                 <label class="label">
                     <span class="field">Twitter:</span>
-                    <input type="text" name="twitter" />                    
+                    <input type="text" name="twitter" value="<?php if(isset($seo['twitter'])): echo $seo['twitter']; endif; ?>" />                      
                 </label>  
 
                 <input type="submit" value="Otimizar Site" class="btn" /> 
@@ -100,18 +109,24 @@
             </fieldset>     
         </form>       
         
-        <!-- //FORM CONFIG SEO -->
-        <form name="config_endereco" action="" method="post">        
+        <!-- //FORM CONFIG ENDERECO -->
+        <form name="config_endereco" action="" method="post">      
+            <?php
+             //Ler a tabela de configuração de endereço.
+            $readEndereco = new read();
+            $readEndereco->ExeRead('config_endereco');
+            $endereco = $readEndereco->getResultado()[0];
+            ?>
             <fieldset>
                 <legend>Endereço/Telefone:</legend>
                 <label class="label">
                     <span class="field">Endereço:</span>
-                    <input type="text" name="endereco" />                    
+                    <input type="text" name="endereco" value="<?php if(isset($endereco['endereco'])): echo $endereco['endereco']; endif; ?>" />                  
                 </label>
                 
                 <label class="label">
                     <span class="field">Telefone:</span>
-                    <input type="text" name="telefone" class="formTel"/>                    
+                    <input type="text" name="telefone" class="formTel" value="<?php if(isset($endereco['telefone'])): echo $endereco['telefone']; endif; ?>" />                
                 </label>
 
                 <input type="submit" value="Otimizar Site" class="btn" /> 

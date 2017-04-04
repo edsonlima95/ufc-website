@@ -100,4 +100,12 @@ class funcoes {
         endif;
     }
     
+    //Funcao de acesso ao super usuario.
+    public static function superUser($nivel = null) {
+        self::$dados = (!empty($nivel) ? $nivel : 1);
+        if($_SESSION['user']['nivel'] != self::$dados):
+           header('Location: dashboard.php?exe=sis/403');
+        endif;
+    }
+    
 }

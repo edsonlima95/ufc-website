@@ -1,3 +1,6 @@
+<?php
+funcoes::superUser();
+?>
 <div class="content home">
     <h1 class="location">Gerenciar Usuários<span><a href="#novousuario" class="j_adduser" title="voltar">Novo usuário</a></span></h1><!--/location-->
     
