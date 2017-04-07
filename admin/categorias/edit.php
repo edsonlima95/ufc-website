@@ -1,6 +1,6 @@
 <div class="content home">
     <h1 class="location"><strong>Editar Categoria:</strong> MMA.</span></h1><!--/location-->
-    
+        <?php echo $_GET['idcat'];  ?>
 	<div class="posts">
     	<form name="editcat" class="formfull" action="" method="post">
 

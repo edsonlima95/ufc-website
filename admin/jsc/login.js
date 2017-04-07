@@ -27,10 +27,10 @@ $(function () {
                     $('.msg').empty().html('<p class="aviso">Senha ou email estão incorretos, verifique sua senha ou email!</p>').fadeIn('slow');
                 } else if (res == 3) {
                     $('.msg').empty().html('<p class="aviso">Você não tem permissão para logar no painel!</p>').fadeIn('slow');
-                }else {
-                //Atrasa um tempo antes de redirecionar.
+                } else {
+                    //Atrasa um tempo antes de redirecionar.
                     window.setTimeout(function () {
-                        //Redireciona para o painel.
+                        //Redireciona para o painel.  
                         $(location).attr('href', 'dashboard.php');
                     }, 1000);
                 }

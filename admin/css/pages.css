@@ -5,9 +5,13 @@
 
 /*  POSTS  */
 .posts{float:left; width:1000px;}
-.posts .paginator{float:left; width:960px; padding:20px; background:#09F; margin-bottom:10px;}
-.posts .paginator a{float:left; margin-right:10px; margin-top:5px; font-weight:bold; text-decoration:none; color:#039; font-size:25px;}
+.posts .paginator {float:left; width:960px; padding:20px; background:#09F; margin-bottom:10px; list-style: none}
+.posts .paginator ul li a{float:left; margin-right:10px; margin-top:5px; font-weight:bold; text-decoration:none; color:#039; font-size:25px;}
 .posts .paginator a:hover{color:#FFF;}
+.posts .paginator ul {list-style: none;}
+.posts .paginator .paginator_form .load {display: none;}
+
+
 .posts .paginator .atv{float:left; margin-right:10px; font-weight:bold; text-decoration:none; color:#000; font-size:25px;}
 .posts .paginator form{float:right;}
 .posts .paginator input[type=text]{font-size:18px; color:#FFF; border:none; border-bottom:1px solid #069; background:none; width:300px; padding:5px;}

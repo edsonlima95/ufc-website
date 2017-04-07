@@ -65,6 +65,13 @@ a{border:none; margin:0;}
 .dialog .newuser label textarea{width:430px;}
 .dialog .newuser label select{min-width:200px;}
 
+/*MODAL USER EDIT.*/
+.dialog .editnewuser{width:500px; height:620px; margin-left:-250px; margin-top:-310px; display: none}
+.dialog .editnewuser .load {display: none}
+.dialog .editnewuser label input{width:430px;}
+.dialog .editnewuser label textarea{width:430px;}
+.dialog .editnewuser label select{min-width:200px;}
+
 /* HEADER */
 #header{width:100%; border-bottom:10px solid #000; border-top:10px solid #000;}
 #header .content{width:1000px; margin:0 auto;}

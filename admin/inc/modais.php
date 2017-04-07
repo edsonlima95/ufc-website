@@ -45,21 +45,31 @@
             <form name="cadnewcat" action="" method="post">
                 <label>
                     <span>Sessão:</span>
-                    <select name="categoria">
-                        <option value=""></option>
-                        <option value="1">ARTIGOS</option>
-                        <option value="2" disabled="disabled">&raquo; MMA</option>
-                        <option value="2" disabled="disabled">&raquo; Jiu-Jitsu</option>
-                        <option value="2" disabled="disabled">&raquo; UFC</option>
-                        <option value="1">VÍDEOS</option>
-                        <option value="2" disabled="disabled">&raquo; MMA</option>
-                        <option value="2" disabled="disabled">&raquo; Jiu-Jitsu</option>
-                        <option value="2" disabled="disabled">&raquo; UFC</option>
+                    <select name="cat_pai">
+                        <option value="" selected></option>
+                        <?php 
+                        //Ler as categorias pai.
+                        $readCatPai = new read();
+                        $readCatPai->ExeRead('categorias',"WHERE cat_pai IS NULL");
+                        if($readCatPai->getResultado()):
+                            foreach ($readCatPai->getResultado() as $resCatPai):
+                                echo '<option value="'.$resCatPai['id'].'">'.$resCatPai['nome'].'</option>';
+                                //Ler as sub-categorias filhas.
+                                $readCatSub = new read();
+                                $readCatSub->ExeRead('categorias',"WHERE cat_pai = :idcat","idcat={$resCatPai['id']}");
+                                if($readCatSub->getResultado()):
+                                    foreach ($readCatSub->getResultado() as $resCatSub):
+                                        echo '<option disabled value="'.$resCatSub['id'].'">'.$resCatSub['nome'].'</option>';
+                                    endforeach;
+                                endif;
+                            endforeach;
+                        endif;
+                        ?>
                     </select>
                 </label>
                 <label>
                     <span>Categoria:</span>
-                    <input type="text" name="categoria" />
+                    <input type="text" name="nome" />
                 </label>
 
                 <input type="submit" value="Cadastrar" class="btn" />
@@ -67,7 +77,7 @@
             </form>
 
         </div><!--/content-->
-        <a href="#" class="closemodal">X FECHAR</a>
+        <a href="#" class="closemodal" id="newcat">X FECHAR</a>
     </div><!--/newcat-->
 
 
@@ -79,8 +89,8 @@
                 <label>
                     <span>Nível:</span>
                     <select name="nivel">
-                        <option value="1">Admin</option>
-                        <option value="2">Super Admin</option>
+                        <option value="2">Admin</option>
+                        <option value="1">Super Admin</option>
                     </select>
                 </label>
                 <label>
@@ -90,17 +100,12 @@
 
                 <label>
                     <span>E-mail:</span>
-                    <input type="text" name="email" />
-                </label>
-
-                <label>
-                    <span>Login:</span>
-                    <input type="text" name="user" />
+                    <input type="email" name="email" />
                 </label>
 
                 <label>
                     <span>Senha:</span>
-                    <input type="password" name="pass" />
+                    <input type="password" name="senha" />
                 </label>
 
                 <input type="submit" value="Cadastrar" class="btn" />
@@ -108,6 +113,9 @@
             </form>
 
         </div><!--/content-->
-        <a href="#" class="closemodal">X FECHAR</a>
+        <a href="#" class="closemodal j_closenewuser" id="newuser">X FECHAR</a>
     </div><!--/newuser-->
+    
+    <!--Modal para a edicao dos dados, sera passado pelo ajax.-->
+    <div class="modal editnewuser" style="display: none"></div>
 </div><!-- /dialog -->
