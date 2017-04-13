@@ -25,7 +25,7 @@ require '../dts/configs.php';
             header('Location: dashboard.php');
         endif;
         ?>
-        <div class="loginbox">
+        <div class="loginbox" style="display: none">
             <h1>Efetuar Login: <img src="img/loader.gif" alt="Carregando" title="Carregando" /></h1>
             <form name="login" action="" method="post">
                 <label class="label">
