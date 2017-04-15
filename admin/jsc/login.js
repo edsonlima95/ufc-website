@@ -43,5 +43,9 @@ $(function () {
 
         return false;
     });
+    
+    window.setTimeout(function () {
+            $('.loginbox').slideDown('1000');
+    },1000);
 
 });

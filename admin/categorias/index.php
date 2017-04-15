@@ -1,6 +1,11 @@
 <div class="content home">
     <h1 class="location">Gerenciar Categorias <span><?php echo date('d/m/Y H:i'); ?></span></h1><!--/location-->
-
+    <?php
+    //Categorias.
+    if (isset($_GET['catnotfound'])):
+        echo 'Não a categorias cadastradas';
+    endif;
+    ?>
     <div class="posts">
         <div class="paginator">
             <div class="paginator_form">
@@ -13,12 +18,13 @@
         </div><!-- /paginator -->
 
         <?php
+      
         //Busca.
         $search = filter_input_array(INPUT_POST,FILTER_DEFAULT);
         if(isset($search['search'])):
             unset($search['search']);
            $pesquisa = urlencode($search['sposts']);
-           header('Location: dashboard.php?exe=categorias/pesquisa&serch='.$pesquisa);
+           header('Location: dashboard.php?exe=categorias/pesquisa&search='.$pesquisa);
         endif;
         
         //Paginacao.
@@ -36,20 +42,29 @@
             foreach ($readCat->getResultado() as $resultCat):
                 extract($resultCat);
 
-                //Conta quantas sub categorias.
+                //Conta quantas sub categorias o post tem.
                 $readCatCount = new read();
                 $readCatCount->ExeRead('categorias', "WHERE cat_pai = :id", "id={$id}");
                 $countSub = count($readCatCount->getResultado());
              ?>
-                <li class="li">
-                    <img src="../tim.php?src=tpl/_gbt/1.jpg&w=120&h=120" />
+                <li class="li" id="<?=$id?>">
+                   <?php
+                   //Verifica na pasta, se nao tiver nao exibe a img
+                   if(file_exists('../uploads/'.$capa) && !is_dir('../uploads/'.$capa)):                       
+                        echo '<img src="../tim.php?src=../uploads/'.$capa.'&w=120&h=120" />';
+                   endif;
+                   ?>
                     <div class="info" style="width:636px;">
                         <p class="title"><?= $nome ?></p>
                         <p class="resumo"><?= $descricao ?></p>
                         <p class="categoria"><?= date('d/m/Y H:i', strtotime($dada_creacao)); ?></p>
                         <span>
-                            <a title="Excluir" class="delete" href="#excluir">Excluir</a> 
-                            <a title="Editar" class="edit" href="#edit">Editar</a>  
+                            <?php
+                                if($countSub == 0):
+                                    echo '<a title="Excluir" class="delete j_deletarcat" id="'.$id.'" href="#">Excluir</a>'; 
+                                endif;
+                            ?>
+                            <a title="Editar" class="edit" href="dashboard.php?exe=categorias/edit&edita=<?=$id?>" >Editar</a>  
                             <a title="Ver" class="ver" href="../categorias/<?= $nome ?>" target="_blank">Ver</a>                    
                         </span>
                     </div><!--/info-->
@@ -61,21 +76,34 @@
                 $readSub = new read();
                 $readSub->ExeRead('categorias', "WHERE cat_pai = :idpai ORDER BY nome DESC", "idpai={$id}");
                 foreach ($readSub->getResultado() as $resultSub):
+                    
+                $readPostCount = new read();
+                $readPostCount->ExeRead('posts', "WHERE sub_categoria =:sub", "sub={$resultSub['id']}");
+                $countPost = count($readPostCount->getResultado());
                 ?>
-                    <li class="li subli">
-                        <img src="../tim.php?src=tpl/_gbt/1.jpg&w=120&h=120" />
+                    <li class="li subli" id="<?=$resultSub['id']?>">
+                        <?php
+                        //Verifica na pasta, se nao tiver nao exibe a img
+                        if(file_exists('../uploads/'.$resultSub['capa']) && !is_dir('../uploads/'.$resultSub['capa'])):                       
+                             echo '<img src="../tim.php?src=../uploads/'.$resultSub['capa'].'&w=120&h=120" />';
+                        endif;
+                        ?>
                         <div class="info" style="width:636px;">
                             <p class="title"><?= $resultSub['nome']; ?></p>
                             <p class="resumo"><?= $resultSub['descricao']; ?></p>
                             <p class="categoria">04-05-2013 16:28</p>
                             <span>
-                                <a title="Excluir" class="delete" href="#excluir">Excluir</a> 
-                                <a title="Editar" class="edit" href="#edit">Editar</a>  
+                                <?php
+                                    if($countPost == 0):
+                                        echo '<a title="Excluir" class="delete j_deletarcat" id="'.$resultSub['id'].'" href="#">Excluir</a>';
+                                    endif;
+                                ?>
+                                 <a title="Editar" class="edit" href="dashboard.php?exe=categorias/edit&edita=<?=$resultSub['id']?>" >Editar</a>  
                                 <a title="Ver" class="ver" href="../categorias/<?= $nome ?>">Ver</a>                    
                             </span>
                         </div><!--/info-->
                         <ul class="sub">
-                            <li><strong>1280</strong> artigos</li>
+                            <li><strong><?=$countPost?></strong> artigos</li>
                         </ul>
                     </li>
                 <?php

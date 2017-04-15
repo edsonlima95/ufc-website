@@ -11,6 +11,11 @@ $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
 //Tipo de acões.
 switch ($dados['acao']) {
+
+    /*     * ***************************************
+     * GESTÃO DE CONFIGURAÇÕES DO SITE
+     * **************************************** */
+
     //Desativa a manutencao.
     case 'manutencao_desativa':
         unset($dados['acao']);
@@ -88,16 +93,19 @@ switch ($dados['acao']) {
             $updateEndereco->ExeUpdate('config_endereco', $dados, "WHERE id = :id", "id=" . $id . "");
         endif;
         break;
-    //Cadastro de usuarios.
+
+    /*     * ***************************************
+     * GESTÃO DE USUARIOS DO SITE
+     * **************************************** */
     case 'usuario_manager':
         unset($dados['acao']);
-    
+
         if (in_array('', $dados)):
             echo 'campos_branco';
         elseif (!filter_var($dados['email'], FILTER_VALIDATE_EMAIL)):
             echo 'ermail';
         else:
-            $exe = $dados['exe'];//Recebe a acao
+            $exe = $dados['exe']; //Recebe a acao
             //Verifica se o tipo e cadastro.
             if ($exe == 'cadastro'):
                 unset($dados['exe']);
@@ -105,28 +113,28 @@ switch ($dados['acao']) {
                 $readUser = new read();
                 $readUser->ExeRead('users', 'WHERE email = :email OR senha = :senha', "email={$dados['email']}&senha={$dados['senha']}");
                 $user = $readUser->getResultado()[0];
-                if($user):
+                if ($user):
                     echo 'userexiste';
                 else:
-                //Seta os dados.
-                $dados['token'] = $dados['senha'];
-                $dados['data_creacao'] = date('Y-m-d H:i:s');
+                    //Seta os dados.
+                    $dados['token'] = $dados['senha'];
+                    $dados['data_creacao'] = date('Y-m-d H:i:s');
 
-                $createUser = new create();
-                $createUser->ExeCreate('users', $dados);    
-                
-                endif;   
+                    $createUser = new create();
+                    $createUser->ExeCreate('users', $dados);
+
+                endif;
             elseif ($exe == 'atualiza'):
                 unset($dados['exe']);
-                 //id para ser atualizado, esse id veio do campo hidden do formulario de edição
+                //id para ser atualizado, esse id veio do campo hidden do formulario de edição
                 $iduser = $dados['id'];
                 $readUserEdit = new read();
                 //Verifica se o id e diferente, e o email e senha sao iguais a o de outro user.
                 $readUserEdit->ExeRead('users', "WHERE id != :id AND (email = :email OR senha = :senha)", "id={$iduser}&email={$dados['email']}&senha={$dados['senha']}");
                 $user2 = $readUserEdit->getResultado()[0];
-                if($user2):
+                if ($user2):
                     echo 'userexiste';
-                else:  
+                else:
                     //Seta os dados.
                     $dados['token'] = $dados['senha'];
                     $dados['data_creacao'] = date('Y-m-d H:i:s');
@@ -182,56 +190,303 @@ switch ($dados['acao']) {
         unset($dados['acao']);
         //Id para ser deletado.
         $iduserdel = $dados['deluser'];
-        
+
         //Ler os usuarios.
         $readUserDelete = new read();
-        $readUserDelete->ExeRead('users',"WHERE id = :id","id={$iduserdel}");
+        $readUserDelete->ExeRead('users', "WHERE id = :id", "id={$iduserdel}");
         $nivel = $readUserDelete->getResultado()[0]['nivel'];
-        
-        if($_SESSION['user']['id'] == $iduserdel):
+
+        if ($_SESSION['user']['id'] == $iduserdel):
             echo 'prorioPerfil';
         elseif ($nivel == 1):
             echo 'superuser';
         else:
-        //Deleta
-        $delete = new delete();
-        $delete->ExeDelete('users',"WHERE id = :id","id={$iduserdel}");
-        
+            //Deleta
+            $delete = new delete();
+            $delete->ExeDelete('users', "WHERE id = :id", "id={$iduserdel}");
+
         endif;
-        
+
         break;
-        case 'cadastro_categoria':
+
+    /*     * ***************************************
+     * GESTÃO DE CATEGORIAS DO SITE
+     * **************************************** */
+    case 'cadastro_categoria':
         unset($dados['acao']);
-            
+
         //Nome da categoria.
         $nome = $dados['nome'];
-    
+
         if (empty($dados['nome'])):
             echo 'campos_branco';
         else:
             $readCatExiste = new read();
-            $readCatExiste->ExeRead('categorias',"WHERE nome = :nome","nome={$nome}");
-            if($readCatExiste->getResultado()):
+            $readCatExiste->ExeRead('categorias', "WHERE nome = :nome", "nome={$nome}");
+            if ($readCatExiste->getResultado()):
                 echo 'catexiste';
             else:
                 //Se tiver o id sera uma categoria se não sera uma sub.
                 $dados['cat_pai'] = (!empty($dados['cat_pai']) ? $dados['cat_pai'] : null);
-                
+
                 //Seta dada
                 $dados['data_creacao'] = date('Y-m-d H:i:s');
                 $dados['url'] = funcoes::Name($nome);
-                
+
                 //Cadastra no banco.
                 $createCat = new create();
-                $createCat->ExeCreate('categorias',$dados);
-                
+                $createCat->ExeCreate('categorias', $dados);
+
                 //Retorna ultimo id inserido.
                 echo $createCat->getResultado();
             endif;
         endif;
- 
+
         break;
-   //Default caso não aja case.
+
+    case 'select_categoria';
+        echo '<option value="" selected></option>';
+        //Ler as categorias pai.
+        $readCatPai = new read();
+        $readCatPai->ExeRead('categorias', "WHERE cat_pai IS NULL");
+        if ($readCatPai->getResultado()):
+            foreach ($readCatPai->getResultado() as $resCatPai):
+                echo '<option value="' . $resCatPai['id'] . '">' . $resCatPai['nome'] . '</option>';
+                //Ler as sub-categorias filhas.
+                $readCatSub = new read();
+                $readCatSub->ExeRead('categorias', "WHERE cat_pai = :idcat", "idcat={$resCatPai['id']}");
+                if ($readCatSub->getResultado()):
+                    foreach ($readCatSub->getResultado() as $resCatSub):
+                        echo '<option disabled value="' . $resCatSub['id'] . '">' . $resCatSub['nome'] . '</option>';
+                    endforeach;
+                endif;
+            endforeach;
+        endif;
+        break;
+
+    case 'categoria_update';
+        unset($dados['acao']);
+        $img = ($_FILES['capa']['tmp_name'] ? $_FILES['capa'] : null);
+
+        //Recebe o id pelo campo hidenn.
+        $id = $dados['id'];
+
+        if ($img != null):
+            //Verifica a se a imagem existe pega o caminho e deleta da pasta.
+            $readCapa = new read();
+            $readCapa->ExeRead('categorias', "WHERE id = :id", "id={$id}");
+            $capa = '../../uploads/' . $readCapa->getResultado()[0]['capa'];
+
+            if (file_exists($capa) && !is_dir($capa)):
+                unlink($capa);
+            endif;
+
+            //Atualiza a nova imagem.
+            $uploadImagem = new files('../../uploads/');
+            //esse time(), e pq ao ser atualizada a capa pelo ajax, o cach da antiga imagem continua e a miniatura nao mudava para a nova
+            //Com o time ele garante que a img nao sera repetida e o cach sera atualizado, obs: so e preciso se for atualiza pelo ajax.
+            $uploadImagem->enviarImagem($img, funcoes::Name($dados['nome'] . '-' . time()));
+
+            //Retorna o tipo de error, vindo do files.
+            echo $uploadImagem->getErro();
+        endif;
+        //Se enviar a imagen
+        if (isset($uploadImagem) && $uploadImagem->getResultado()):
+            //Seta o caminho
+            $dados['capa'] = funcoes::Name($uploadImagem->getResultado());
+            $dados['data_creacao'] = date('Y-m-d H:i:s', strtotime($dados['data_creacao']));
+            $dados['url'] = funcoes::Name($dados['nome']);
+
+            //Atualiza os dados.
+            $updateCat = new update();
+            $updateCat->ExeUpdate('categorias', $dados, "WHERE id = :id", "id={$id}");
+            //Retorna o caminho da imagem.
+            echo $uploadImagem->getResultado();
+        else:
+            //Apenas atualiza os dados.
+            unset($dados['capa']);
+            //seta os dados
+            $dados['data_creacao'] = date('Y-m-d H:i:s', strtotime($dados['data_creacao']));
+            $dados['url'] = funcoes::Name($dados['nome']);
+
+            //Atualiza os dados.
+            $updateCat = new update();
+            $updateCat->ExeUpdate('categorias', $dados, "WHERE id = :id", "id={$id}");
+        endif;
+
+        break;
+
+    case 'categoria_delete':
+        unset($dados['acao']);
+
+        //id da categoria.
+        $idcat = $dados['delcat'];
+
+        $readCat = new read();
+        $readCat->ExeRead('categorias', "WHERE cat_pai = :id ", "id={$idcat}");
+
+        $readSubPost = new read();
+        $readSubPost->ExeRead('posts', "WHERE sub_categoria = :idsub", "idsub={$idcat}");
+
+        if ($readCat->getResultado()):
+            echo 'contemsub';
+        elseif ($readSubPost->getRowCount()):
+            echo 'contempost';
+        else:
+            //Verifica a se a imagem existe pega o caminho e deleta da pasta.
+            $readCapa = new read();
+            $readCapa->ExeRead('categorias', "WHERE id = :id", "id={$idcat}");
+            $capa = '../../uploads/' . $readCapa->getResultado()[0]['capa'];
+            if (file_exists($capa) && !is_dir($capa)):
+                unlink($capa);
+            endif;
+            $deletcat = new delete();
+            $deletcat->ExeDelete('categorias', "WHERE id = :id", "id={$idcat}");
+        endif;
+
+        break;
+
+    case 'select_categoria_posts';
+        echo '<option value="" selected></option>';
+        //Ler as categorias pai.
+        $readCatPai = new read();
+        $readCatPai->ExeRead('categorias', "WHERE cat_pai IS NULL");
+        if ($readCatPai->getResultado()):
+            foreach ($readCatPai->getResultado() as $resCatPai):
+                echo '<option disabled value="' . $resCatPai['id'] . '">' . $resCatPai['nome'] . '</option>';
+                //Ler as sub-categorias filhas.
+                $readCatSub = new read();
+                $readCatSub->ExeRead('categorias', "WHERE cat_pai = :idcat", "idcat={$resCatPai['id']}");
+                if ($readCatSub->getResultado()):
+                    foreach ($readCatSub->getResultado() as $resCatSub):
+                        echo '<option value="' . $resCatSub['id'] . '">' . $resCatSub['nome'] . '</option>';
+                    endforeach;
+                endif;
+            endforeach;
+        endif;
+        break;
+
+    /*     * ***************************************
+     * GESTÃO DE POSTS DO SITE cadastro_posts
+     * **************************************** */
+
+    case 'cadastro_posts':
+        unset($dados['acao']);
+
+        if (in_array('', $dados)):
+            echo 'campos_branco';
+        else:
+            //Seta dada
+            $dados['data_creacao'] = date('Y-m-d H:i:s');
+            $idsub = $dados['sub_categoria'];
+            $readCatPost = new read();
+            $readCatPost->ExeRead('categorias', "WHERE id = :id", "id={$idsub}");
+
+            //Id da categoria.
+            $dados['categoria'] = $readCatPost->getResultado()[0]['cat_pai'];
+
+            //Cadastra no banco.
+            $createCat = new create();
+            $createCat->ExeCreate('posts', $dados);
+
+            //Retorna ultimo id inserido.
+            echo $createCat->getResultado();
+        endif;
+
+        break;
+
+    case 'post_update';
+        sleep(1); //Ta dando um conflito, progresso do modal load.
+        unset($dados['acao']);
+        
+        //Seta dados
+        $dados['status'] = (!empty($dados['status']) ? $dados['status'] : 0);
+        //htmlspecialchars_decode, tira todos os caracteris especiais passado pelo tinnymce.
+        $dados['conteudo'] = strip_tags(trim(htmlspecialchars_decode($dados['conteudo'])));
+        //Seta dada
+        $dados['data_creacao'] = funcoes::validaData($dados['data_creacao']);
+        //Url 
+        $dados['nome'] = funcoes::Name($dados['titulo']);
+        //id do post
+        $idpost = $dados['id'];
+
+        //Ler a categoria de acordo com a sub.
+        $idsub = $dados['sub_categoria'];
+        $readCatPost = new read();
+        $readCatPost->ExeRead('categorias', "WHERE id = :id", "id={$idsub}");
+        //Id da categoria.
+        $dados['categoria'] = $readCatPost->getResultado()[0]['cat_pai'];
+
+        //ENVIO DA CAPA
+        $img = ($_FILES['capa']['tmp_name'] ? $_FILES['capa'] : '');
+
+        if ($img != ''):
+            //Verifica a se a imagem existe pega o caminho e deleta da pasta.
+            $readCapa = new read();
+            $readCapa->ExeRead('posts', "WHERE id = :id", "id={$idpost}");
+            $capa = '../../uploads/' . $readCapa->getResultado()[0]['capa'];
+
+            if (file_exists($capa) && !is_dir($capa)):
+                unlink($capa);
+            endif;
+
+            //Atualiza a nova imagem.
+            $uploadImagem = new files('../../uploads/');
+            $uploadImagem->enviarImagem($img, $idpost. '-' . time(), 0, 'posts');
+
+            //Retorna o tipo de error, vindo do files.
+            $dados['capa'] = $uploadImagem->getResultado();
+        else:
+            unset($dados['capa']);
+        endif;
+
+        //ENVIO DA GALERIA.
+        $gb = ($_FILES['gb']['tmp_name'] ? $_FILES['gb'] : null);
+       
+        if (isset($gb['tmp_name'])):
+           $galeria = new galeria();
+           $galeria->enviarGaleria($gb, $idpost);
+        endif;
+        unset($dados['gb']);
+        
+        //Atualiza os dados.
+        $updaPost = new update();
+        $updaPost->ExeUpdate('posts',$dados,"WHERE id = :id","id={$idpost}");
+        break;
+    case 'post_del_galeri':
+       $idgal = $dados['delimg'];
+       $galeriaDel = new galeria();
+       $galeriaDel->deleteGaleria($idgal);
+    break;
+    
+    case'post_delete':
+      unset($dados['acao']);
+    //id do post.        
+    $idpostdel = $dados['delpost'];
+    
+    //Deleta a galeria.
+    $delGaleria = new galeria();
+    $delGaleria->deleteGaleria($idpostdel);
+    
+    //Deleta a capa do post.
+    $readCapa = new read();
+    $readCapa->ExeRead('posts', "WHERE id = :id", "id={$idpostdel}");
+    $capa = '../../uploads/' . $readCapa->getResultado()[0]['capa'];
+    if (file_exists($capa) && !is_dir($capa)):
+        unlink($capa);
+    endif;
+    
+    //Deleta os camentarios.
+    $delComents = new delete();
+    $delComents->ExeDelete('comentarios',"WHERE id_post = :id","id={$idpostdel}");
+    
+    //Delera o post.
+    $delComents = new delete();
+    $delComents->ExeDelete('posts',"WHERE id = :id","id={$idpostdel}");
+    
+    break;
+
+    //Default caso não aja case.
     default:
         echo 'Error';
         break;

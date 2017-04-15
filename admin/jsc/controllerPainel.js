@@ -6,12 +6,12 @@ $(window).ready(function () {
 });
 
 $(function () {
-    
-    
+
+
     /***********************************
      *CONFIGURAÇÕES DO SITE
      ***********************************/
-    
+
     //Envio dos form. primeira aba a de manutencao.
     //Remove o evento de submit do form.
     $('form[name="config_manutencao"]').submit(function () {
@@ -225,7 +225,7 @@ $(function () {
                     ).fadeIn('slow');
         }
     }
-    
+
     //ABRIR AS MSG
     /*Ao executar essa funcao o id nunca pode ser o mesmo nome.
      * OBS: ao ser executada ele abri o fundo preto.*/
@@ -284,12 +284,12 @@ $(function () {
         });
         return false;
     });
-    
+
     //Faz consulta do usuario para edicao.
     $('.j_edit').click(function () {
         var iduser = $(this).attr('id');
-        var dados = '&acao=usuarios_consulta&userid='+iduser;
-         //Envia os dados.
+        var dados = '&acao=usuarios_consulta&userid=' + iduser;
+        //Envia os dados.
         $.ajax({
             url: "j_php/painel.php",
             type: 'POST',
@@ -304,17 +304,17 @@ $(function () {
         });
         return false;
     });
-    
+
     //fecha o modal de edicao.
-    $('.editnewuser').on('click','.j_closemodaledit', function () {
+    $('.editnewuser').on('click', '.j_closemodaledit', function () {
         $('.editnewuser').fadeOut("slow", function () {
             $('.dialog').fadeOut('fast');
         });
         return false;
     });
-    
+
     //Envia os dados para a atualizaçao
-    $('.editnewuser').on('submit','form[name=atualizanewuser]', function () {
+    $('.editnewuser').on('submit', 'form[name=atualizanewuser]', function () {
         //Encapsula o formulario e os dados.
         var form = $(this);
         var dados = $(this).serialize() + '&acao=usuario_manager&exe=atualiza';
@@ -350,13 +350,13 @@ $(function () {
         });
         return false;
     });
-    
+
     //Deleta usuarios.
     $('.j_delete').click(function () {
         var iddelete = $(this).attr('id');
-         //Encapsula o formulario e os dados.
+        //Encapsula o formulario e os dados.
         var form = $(this);
-        var dados = $(this).serialize() + '&acao=usuarios_delete&deluser='+iddelete;
+        var dados = $(this).serialize() + '&acao=usuarios_delete&deluser=' + iddelete;
 
         //Envia os dados.
         $.ajax({
@@ -366,22 +366,22 @@ $(function () {
             success: function (res) {
                 if (res == 'prorioPerfil') {
                     msg('proprio_perfil', 'error', 'Você não pode deletar seu próprio perfil!');
-                }else if (res == 'superuser'){
+                } else if (res == 'superuser') {
                     msg('superuser_perfil', 'error', 'Você não pode deletar um super usuario!');
-                }else{
+                } else {
                     msg('sucesso_del_usuarios', 'accept', 'Dados deletados com sucesso!');
-                     $('.usuarios .users li[id='+iddelete+']').fadeOut('slow');     
+                    $('.usuarios .users li[id=' + iddelete + ']').fadeOut('slow');
                 }
             }
-        }); 
+        });
         return false;
     });
-    
+
     /*************************************************
      *CONFIGURAÇÕES DE CATEGORIAS, DO SITE
      *************************************************/
-    
-    
+
+
     //Cadastro de categorias.
     $('form[name=cadnewcat]').submit(function () {
         //Encapsula o formulario e os dados.
@@ -398,17 +398,151 @@ $(function () {
                 form.find('.load').fadeIn('fast');
             },
             success: function (res) {
-                
+                alert(res);
                 if (res == 'campos_branco') {
                     msgDial('error_campos', 'alert', 'O campo categoria não pode ficar em branco!');
                 } else if (res == 'catexiste') {
                     msgDial('categoria_existe', 'error', 'A categoria que você tentou cadastrar, já esta cadastrada!');
                 } else {
-                    msgDial('sucesso_categoria', 'accept', 'Dados atualizados com sucesso!');
+                    //Mostra a mensagem sem o fechamento.
+                    $('.ajaxmsg').addClass('sucesso_categoria accept').html(
+                            '<strong class="tt">Sucesso:</strong>' +
+                            '<p>Dados atualizados com sucesso!</p>'
+                            ).fadeIn('slow');
+
                     //Redireciona.
                     window.setTimeout(function () {
-                        $(location).attr('href','dashboard.php?exe=categorias/edit&idcat='+res);
-                    },2000);
+                        $(location).attr('href', 'dashboard.php?exe=categorias/edit&idcat=' + res);
+                    }, 2000);
+                }
+            },
+            complete: function () {
+                form.find('.load').fadeOut('fast');
+
+            }
+        });
+        return false;
+    });
+
+    //Botao de enviar a imagem da categoria.
+    $('.j_send').click(function () {
+        $('.j_capa').click().change(function () {
+            $('.j_false').text($(this).val());
+        });
+        return false;
+    });
+
+
+    //Atualiza categorias.
+    $('form[name=editcat]').submit(function () {
+
+        var form = $(this);
+        var bar = form.find('.progress');
+        var per = form.find('.bar');
+
+        //Envia os dados pelo plugin do formulario.
+        form.ajaxSubmit({
+            url: 'j_php/painel.php',
+            type: 'POST',
+            data: {acao: 'categoria_update'},
+            uploadProgress: function (evento, posicao, total, porcent) {
+                //Mostra a barra de porcentagem, e seta os valores.
+                var porcentagem = porcent + '%';
+                bar.fadeIn('fast', function () {
+                    per.width(porcentagem).text(porcentagem);
+                });
+            },
+            success: function (res) {
+
+                if (res == 1) {
+                    msg('cat_error_size', 'alert', 'Porfavor insira um arquivo de até 2MB');
+                } else if (res == 2) {
+                    msg('cat_error_tipo', 'alert', 'Porfavor verifique o tipo de arquivo');
+                } else {
+                    $('.viewcapa').fadeOut('slow', function () {
+                        //Seta o caminho das imagens nos elementos na edicao.
+                        $(this).find('img').attr('src', 'tim.php?src=../uploads/' + res + '&h=42');
+                        $(this).find('a').attr('href', '../uploads/' + res);
+                        $('.viewcapa').fadeIn('slow');
+                    });
+                }
+            },
+            complete: function () {
+
+                //Some com a barra e reset os valores.
+                bar.fadeOut('slow', function () {
+                    per.width('0%').text('0%');
+                });
+            }
+        });
+        return false;
+    });
+
+    //Deleta as categorias.
+    $('.j_deletarcat').click(function () {
+        //Recupera o id da categoria ou sub.
+        var idcat = $(this).attr('id');
+
+        var form = $(this);
+        var dados = '&acao=categoria_delete&delcat=' + idcat;
+
+        //Envia os dados.
+        $.ajax({
+            url: "j_php/painel.php",
+            type: 'POST',
+            data: dados,
+            success: function (res) {
+
+                if (res == 'contemsub') {
+                    msg('cat_error', 'error', 'Você não pode deletar a categoria, contem sub-categorias!');
+                } else if (res == 'contempost') {
+                    msg('subcat_error', 'error', 'Você não pode deletar a sub-categoria, contem posts cadastrados!');
+                } else {
+                    $('.posts li[id=' + idcat + ']').fadeOut('slow');
+                    msg('sucesso_cat', 'accept', 'Deletado com sucesso!');
+                    window.setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                }
+            }
+        });
+        return false;
+    });
+
+    /*************************************************
+     *CONFIGURAÇÕES DE POSTS, DO SITE
+     *************************************************/
+
+    //Cadastra os posts
+    $('form[name=cadnewpost]').submit(function () {
+        //Encapsula o formulario e os dados.
+        var form = $(this);
+        var dados = $(this).serialize() + '&acao=cadastro_posts';
+
+        //Envia os dados.
+        $.ajax({
+            url: "j_php/painel.php",
+            type: 'POST',
+            data: dados,
+            beforeSend: function () {
+                //Pego o load apenas deste formulario especifico, pois todos os form tem o mesmo load.
+                form.find('.load').fadeIn('fast');
+            },
+            success: function (res) {
+                alert(res);
+                if (res == 'campos_branco') {
+                    msgDial('error_campos_post', 'alert', 'Porfavor preencha todos os campos!');
+                } else {
+                    //Mostra a mensagem sem o fechamento.
+                    $('.ajaxmsg').addClass('sucesso_post accept').html(
+                            '<strong class="tt">Sucesso:</strong>' +
+                            '<p>Dados atualizados com sucesso!</p>'
+                            ).fadeIn('slow');
+
+                    //Redireciona.
+                    window.setTimeout(function () {
+                        $(location).attr('href', 'dashboard.php?exe=posts/edit&idpost=' + res);
+                    }, 2000);
                 }
             },
             complete: function () {
@@ -417,4 +551,123 @@ $(function () {
         });
         return false;
     });
+
+    //Efeitos Formulario de atualizacao dos posts.
+
+    //Botao de envio da galeira.
+    $('.j_gsend').click(function () {
+        $('.j_gallery').click().change(function () {
+            var countNumFiles = $(this)[0].files.length;
+            $('.j_gfalse').animate({width: '300px'}, 500, function () {
+                $(this).html("<strong>" + countNumFiles + "</strong> itens selecionados");
+            });
+        });
+    });
+
+    //Verifica se ta checked primeiro, e adiciona o estilo.
+    if ($('form[name=editpost] .check input').is(':checked')) {
+        $('form[name=editpost] .check').css('background', '#0C0');
+    } else {
+        $('form[name=editpost] .check').css('background', '#999');
+    }
+
+    //Alterna a cor doc checked.
+    $('form[name=editpost] .check').click(function () {
+        //Verifica se ta checked.
+        if ($(this).find('input').is(':checked')) {
+            $(this).css('background', '#0C0');
+        } else {
+            $(this).css('background', '#999');
+        }
+    });
+
+    //Atualiza os posts
+    $('form[name="editpost"]').submit(function () {
+        //Ta dando um atraso no tinny, para corrigir usa o disparo dele.
+        tinyMCE.triggerSave();
+
+        //Envia os dados.
+        var form = $(this);
+        var bar = $('.j_edit_posts .progress');
+        var per = $('.j_edit_posts .progress .bar');
+
+        //Envia os dados pelo plugin do formulario.
+        form.ajaxSubmit({
+            url: 'j_php/painel.php',
+            type: 'POST',
+            data: {acao: 'post_update'},
+            uploadProgress: function (evento, posicao, total, porcent) {
+                //Mostra a barra de porcentagem, e seta os valores.
+                var porcentagem = porcent + '%';
+
+                //So vou executar o load se existir valor nos campos de imagem.
+                var capa = form.find('.j_capa');
+                var galeria = form.find('.j_gallery');
+
+                if (capa.val() || galeria.val()) {
+                    $('.dialog').fadeIn('fast', function () {
+                        //Abri o modal de load dos arquivos.
+                        $('.j_edit_posts').fadeIn('slow', function () {
+                            //Apresenta a barra de progresso.
+                            bar.fadeIn('slow');
+                            per.width(porcentagem).text(porcentagem);
+                        });
+                    });
+                }
+            },
+            success: function() {
+                //Se nao tiver os arquivso mostra so a mensagem sem o load.
+               $('.dialog').fadeIn('fast', function () {
+                        //Abri o modal de load dos arquivos.
+                        $('.j_edit_posts').fadeIn('slow', function () {
+                            $('.accept').fadeIn('slow');
+                        });
+                    });                          
+            },
+            complete: function () {
+                bar.fadeOut('fast', function () {
+                    $('.accept').fadeIn('slow');
+                });
+            }
+        });
+        return false;
+    });
+    //Deleta uma imagem da galeria dos postsno form de edicao.
+    $('.galerry .galerrydel').click(function () {
+        var idimg = $(this).attr('id');
+        $('li[class=j_' + idimg + ']').delay('500').fadeOut("slow").css('background', 'red');
+        $.ajax({
+            url: 'j_php/painel.php',
+            type: 'POST',
+            data: 'acao=post_del_galeri&delimg='+idimg
+        });
+        return false;
+    });
+
+    //Fecha o modal de load dos arquivos.
+    $('.j_closeloadposts').click('slow', function () {
+        window.location.reload();
+        $('.j_edit_posts').fadeOut('fast', function () {
+            $('.dialog').fadeOut('fast');
+            $('.accept').fadeOut('fast');
+            $('.progress').fadeIn('fast', function () {
+                $(this).find('.bar').css({width: '0%'}).text('0%');
+            });
+        });
+        return false;
+    });
+    
+    //Deleta os posts.
+    $('.j_delposts').click(function () {
+        var idpost = $(this).attr('id');
+        var url = 'j_php/painel.php';
+        var dados = 'acao=post_delete&delpost='+idpost;
+        $.post(url,dados, function () {
+            window.setTimeout(function () {
+            $('li[id=j_'+idpost+']').fadeOut('slow');
+        },1000);
+        });
+        return false;
+    });
+    
 });

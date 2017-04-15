@@ -93,14 +93,14 @@ class paginacao {
             $paginas = ceil($this->rows / $this->limit);
             $maxlinks = $this->maxlinks;
             //HTML
-            $this->paginator = '<ul class="pagination" style="margin-left: 20px; float: left; clear: both">'; //Abri a paginacao
+            $this->paginator = '<ul class="">'; //Abri a paginacao
             $this->paginator .= "<li><a title=\"{$this->first}\" href=\"{$this->link}1\">{$this->first}</a></li>"; //PRIMEIRA PAG
             for ($ipag = $this->page - $maxlinks; $ipag <= $this->page - 1; $ipag ++):
                 if ($ipag >= 1)://So exibe os numero positivos.
                     $this->paginator .= "<li><a title=\"Pagina {$ipag}\" href=\"{$this->link}{$ipag}\">{$ipag}</a></li>";
                 endif;
             endfor;
-            $this->paginator .= "<li class=\"active\"><span>{$this->page}</span></li>"; //PAGINA ATUAL. 
+            $this->paginator .= "<li class=\"atv\"><span>{$this->page}</span></li>"; //PAGINA ATUAL. 
             for ($dpag = $this->page + 1; $dpag <= $this->page + $maxlinks; $dpag ++):
                 if ($dpag <= $paginas):
                     $this->paginator .= "<li><a title=\"Pagina {$dpag}\" href=\"{$this->link}{$dpag}\">{$dpag}</a></li>";

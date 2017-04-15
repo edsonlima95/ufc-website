@@ -1,11 +1,30 @@
+<!--MODAL DE LOADS DE POSTS.-->
+<div class="loadmodal j_edit_posts">
+    <p class="title">
+        <img src="img/loader.gif" alt="Carregando" title="Carregando" />
+        ATUALIZANDO POST!
+        <span>Aguarde enquanto todos os dados são processados.</span>
+    </p>
+    <div class="content">
+        <div class="progress">
+            <div class="bar">0%</div>
+        </div>
+
+        <p class="accept">
+            <strong>Parabéns</strong>. Seu post foi atualizado com sucesso!
+            <a href="#" class="j_closeloadposts">FECHAR</a>
+        </p>            
+    </div><!--/CONTENT-->
+</div><!--/LOADMODAL-->
+
 <div class="dialog">
-    
+
     <div class="loadsistema">
         <img src="img/loader.gif" title="Carregando..." alt="Carregando">
     </div><!-- msg -->
-    
+
     <div class="ajaxmsg msg"></div><!-- msg -->
-    
+
     <!-- NEW POST -->
     <div class="modal newpost">
         <h2>NOVO POST:</h2>
@@ -13,16 +32,7 @@
             <form name="cadnewpost" action="" method="post">
                 <label>
                     <span>Selecione a categoria:</span>
-                    <select name="categoria">
-                        <option value="1" disabled>ARTIGOS</option>
-                        <option value="2">&raquo; MMA</option>
-                        <option value="2">&raquo; Jiu-Jitsu</option>
-                        <option value="2">&raquo; UFC</option>
-                        <option value="1" disabled>VÍDEOS</option>
-                        <option value="2">&raquo; MMA</option>
-                        <option value="2">&raquo; Jiu-Jitsu</option>
-                        <option value="2">&raquo; UFC</option>
-                    </select>
+                    <select name="sub_categoria"></select>
                 </label>
                 <label>
                     <span>Titulo do post:</span>
@@ -46,25 +56,7 @@
                 <label>
                     <span>Sessão:</span>
                     <select name="cat_pai">
-                        <option value="" selected></option>
-                        <?php 
-                        //Ler as categorias pai.
-                        $readCatPai = new read();
-                        $readCatPai->ExeRead('categorias',"WHERE cat_pai IS NULL");
-                        if($readCatPai->getResultado()):
-                            foreach ($readCatPai->getResultado() as $resCatPai):
-                                echo '<option value="'.$resCatPai['id'].'">'.$resCatPai['nome'].'</option>';
-                                //Ler as sub-categorias filhas.
-                                $readCatSub = new read();
-                                $readCatSub->ExeRead('categorias',"WHERE cat_pai = :idcat","idcat={$resCatPai['id']}");
-                                if($readCatSub->getResultado()):
-                                    foreach ($readCatSub->getResultado() as $resCatSub):
-                                        echo '<option disabled value="'.$resCatSub['id'].'">'.$resCatSub['nome'].'</option>';
-                                    endforeach;
-                                endif;
-                            endforeach;
-                        endif;
-                        ?>
+                        <!--Alimentado pelo ajax.-->
                     </select>
                 </label>
                 <label>
@@ -115,7 +107,7 @@
         </div><!--/content-->
         <a href="#" class="closemodal j_closenewuser" id="newuser">X FECHAR</a>
     </div><!--/newuser-->
-    
+
     <!--Modal para a edicao dos dados, sera passado pelo ajax.-->
     <div class="modal editnewuser" style="display: none"></div>
 </div><!-- /dialog -->

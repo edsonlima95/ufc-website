@@ -11,6 +11,18 @@
 .posts .paginator ul {list-style: none;}
 .posts .paginator .paginator_form .load {display: none;}
 
+/*POST MODAL LOAD.*/
+
+.loadmodal{position:fixed; display: none; background:#fff; width:440px; z-index:105; height:176px; left:50%; top:50%; margin-left:-220px; margin-top:-88px;}
+.loadmodal .title{padding:20px; background:#06F; color:#FFF; font-weight:200; font-size:30px;}
+.loadmodal .title img{float:right; margin:12px 0 0 0; display: none}
+.loadmodal .title span{display:block; font-size:14px; font-weight:bold; margin-top:-5px;}
+.loadmodal .content{padding:20px;}
+.loadmodal .content .progress{width:100%; padding:5px; border:1px solid #999; width:388px; display: none}
+.loadmodal .content .progress .bar{background:#06F; width:0%; padding:5px; max-width:378px; color:#fff; text-align:center;}
+.loadmodal .accept{font-size:20px; display: none; text-align:center; color:#093; padding:8px 5px; background:#DDFFE6;}
+.loadmodal .accept a{position:absolute; font-size:12px; top:32px; right:20px; text-decoration:none; color:#FFF; padding:8px 10px; background:#900;}
+.loadmodal .accept a:hover{background:#009;}
 
 .posts .paginator .atv{float:left; margin-right:10px; font-weight:bold; text-decoration:none; color:#000; font-size:25px;}
 .posts .paginator form{float:right;}
@@ -53,11 +65,11 @@
 .posts .formfull .label select{min-width:250px; padding:8px; border:5px solid #CCC; font-size:18px;}
 
 .posts .formfull .progress{width:944px; border:5px solid #ccc; padding:3px; float:left; margin-bottom:20px;}
-.posts .formfull .progress .bar{background:#8CFFA9; width:22%; padding:5px; text-align:center; max-width:934px;}
+.posts .formfull .progress .bar{background:#8CFFA9; width:0%; padding:5px; text-align:center; max-width:934px;}
 
 .posts .formfull .label .formDate{width:180px;}
 
-.posts .formfull .label .j_false{float:left; padding:9px; min-width:220px; height:24px; border:5px solid #CCC; font-size:18px;}
+.posts .formfull .label .j_false, .posts .formfull .label .j_gfalse{float:left; padding:9px; min-width:220px; height:24px; border:5px solid #CCC; font-size:18px;}
 .posts .formfull .label .j_capa{display:none;}
 .posts .formfull .label .j_gallery{display:none;}
 .posts .formfull .label .j_send{border:5px dashed #CCC; padding:6px; cursor:pointer; margin:0 10px; float:left;}

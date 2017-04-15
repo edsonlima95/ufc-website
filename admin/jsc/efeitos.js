@@ -24,6 +24,11 @@ $(function () {
     //EFEITO DOS MODAIS
     //Efeito de abrir a modal de criar categorias.
     $('.j_addcat').click(function () {
+        //Adiciona o select da categoria.
+        $.post('j_php/painel.php','acao=select_categoria', function (res) {
+            $('form[name=cadnewcat]').find('select').html(res);
+        });
+        
         //Abri o funco escuro.
         $('.dialog').fadeIn('fast', function () {
             $('.newcat').fadeIn('slow');
@@ -33,6 +38,10 @@ $(function () {
 
     //Efeito de abrir a modal de criar post.
     $('.j_addpost').click(function () {
+        //Adiciona o select dos posts.
+        $.post('j_php/painel.php','acao=select_categoria_posts', function (res) {
+            $('form[name=cadnewpost]').find('select').html(res);
+        });
         //Abri o funco escuro.
         $('.dialog').fadeIn('fast', function () {
             $('.newpost').fadeIn('slow');

@@ -21,6 +21,7 @@
             <!--<script type="text/javascript" src="jsc/tiny_mce/plugins/tinybrowser/tb_tinymce.js.php"></script>-->
 
             <script type="text/javascript" src="jsc/jquery.mask.js"></script>
+            <script type="text/javascript" src="jsc/jquery.form.js"></script>
             <script type="text/javascript" src="jsc/plugins.js"></script>
             <script type="text/javascript" src="jsc/controllerPainel.js"></script>
             <script type="text/javascript" src="jsc/efeitos.js"></script>

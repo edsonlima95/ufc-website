@@ -42,11 +42,13 @@ class funcoes {
 
     //Limta o numero de palavras no texto
     public static function limtarTextos($string, $limite) {
+        $string = strip_tags($string);
+        $numWords = strlen($string);
         self::$dados = substr($string, 0, $limite);
         self::$formato = strrpos(self::$dados, ' ');
-        $texoCompleto = substr(self::$dados, 0, self::$formato) . '...';
-
-        return $texoCompleto;
+        $texoCompleto = substr(self::$dados, 0, self::$formato);
+        $res = ($limite < $numWords ? $texoCompleto : $string);
+        return $res;
     }
 
     // pega o id da categoria informada.
@@ -99,13 +101,13 @@ class funcoes {
             require_once ($caminho);
         endif;
     }
-    
+
     //Funcao de acesso ao super usuario.
     public static function superUser($nivel = null) {
         self::$dados = (!empty($nivel) ? $nivel : 1);
-        if($_SESSION['user']['nivel'] != self::$dados):
-           header('Location: dashboard.php?exe=sis/403');
+        if ($_SESSION['user']['nivel'] != self::$dados):
+            header('Location: dashboard.php?exe=sis/403');
         endif;
     }
-    
+
 }

@@ -49,14 +49,29 @@ class files {
         $this->nome = ((string) $nome ? $nome : substr($imagens['name'], 0, strrpos($imagens['name'], '.'))); //Pega o nome ate o ponto so.
         $this->width = ((int) $width ? $width : 1366);
         $this->folder = ((string) $folder ? $folder : 'imagens');
-        $this->verificaFolder($this->folder);
-        $this->setNome();
-        if(!$this->file['tmp_name']):
+        $tamanho = ($size ? $size : 2);
+
+        $arrTipo = [
+            'image/jpg',
+            'image/jpeg',
+            'image/pjpeg',
+            'image/png',
+            'image/x-png'
+        ];
+
+        if (!$this->file['tmp_name']):
             return false;
+        elseif ($this->file['size'] > $tamanho * (1024 * 1024)):
+            echo 1;
+            $this->resultado = false;
+        elseif (!in_array($this->file['type'], $arrTipo)):
+            $this->erro = 2;
+            $this->resultado = false;
         else:
+            $this->verificaFolder($this->folder);
+            $this->setNome();
             $this->moveFiles();
         endif;
-        
     }
 
     //Metodo para enviar files;
@@ -144,7 +159,8 @@ class files {
     private function moveFiles() {
         if (!empty($this->file)):
             move_uploaded_file($this->file['tmp_name'], $this->dirBase . $this->caminho . $this->nome);
-            $this->resultado = true;
+            $this->resultado = $this->caminho . $this->nome;
+            return true;
             $this->erro = ['Enviado com sucesso!', SUCCESS];
         else:
             $this->resultado = false;

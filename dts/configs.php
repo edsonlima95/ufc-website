@@ -9,4 +9,6 @@ define('MAILPORT', '587');
 define('MAILPASS', 'rock2016');
 define('MAILHOST', 'smtp.gmail.com');
 
+require 'functions.php';
+
 
