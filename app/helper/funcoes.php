@@ -110,4 +110,12 @@ class funcoes {
         endif;
     }
 
+    //Fucao para contar a soma das visitas do site
+    public static function somaTrafico($coluna, $tabela) {
+        $read = new read();
+        //Soma todas as visitas do campo.
+        $read->executeQuery("SELECT SUM({$coluna}) AS visitas FROM {$tabela}");
+        return $soma = $read->getResultado()[0]['visitas'];
+    }
+
 }

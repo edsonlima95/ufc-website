@@ -87,5 +87,20 @@ $(function () {
         });
         return false;
     });
+    
+    //ABRE E FECHA O MODAL DE RELATORIO DA HOME.
+    $('.j_abrirelatorio').click(function () {
+        $('.dialog').fadeIn('fast', function () {
+            $('.modaltrafego').fadeIn('slow');
+        });
+        return false;
+    });
+    
+    $('.j_closetrafic').click(function () {
+        $('.modaltrafego').fadeOut('slow', function () {
+            $('.dialog').fadeOut('fast');
+        });
+        return false;
+    });
 
 });

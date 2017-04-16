@@ -657,6 +657,14 @@ $(function () {
         return false;
     });
     
+    //Compartilha no facebook.
+    $('.j_compartilha').click(function () {
+        var link = $(this).attr('href');
+        //Abri uma nov ajanela.
+        window.open('http://www.facebook.com/sharer.php?u='+link,'Curso jquery','width=500,height=400,location=no');
+        return false;
+    });
+    
     //Deleta os posts.
     $('.j_delposts').click(function () {
         var idpost = $(this).attr('id');
@@ -667,6 +675,13 @@ $(function () {
             $('li[id=j_'+idpost+']').fadeOut('slow');
         },1000);
         });
+        return false;
+    });
+    
+    /*****************************************
+     * HOME
+     *****************************************/
+    $('form[name=geradados]').submit(function () {
         return false;
     });
     

@@ -10,7 +10,7 @@
         <div class="paginator">
             <div class="paginator_form">
                 <img src="img/loader.gif" class="load" alt="Carregando..." title="Carregando..." />
-            <form name="searchpost" action="" method="post">
+                <form name="searchpost" action="" method="post">
                 <input type="text" name="sposts" title="Pesquisar Categorias"  class="j_placeholder"  />
                 <input type="submit" name="search" value="Buscar" class="btn" />
             </form>

@@ -3,6 +3,29 @@
 .erronotfound span{display:block; text-align:center; margin:20px 0 0 0; font-size:60px; color:#FF8080}
 .erronotfound span strong{font-size:100px; font-weight:400; color:#fff; display:block;}
 
+/*  HOME MODAL DE ESTATISTICAS */
+.modaltrafego{position:fixed; display: none; z-index:105; background:#FFF; width:860px; height:560px; left:50%; top:50%; margin-left:-430px; margin-top:-280px;}
+.modaltrafego h3{padding:20px; background:#06F; font-size:20px; font-weight:400; text-transform:uppercase; color:#fff;}
+.modaltrafego h3 a{float:right; font-size:12px; font-weight:bold; text-decoration:none; color:#069; padding:8px 15px; background:#fff;}
+.modaltrafego h3 a:hover{background:#900; color:#fff;}
+.modaltrafego form{padding:20px 30px; width:800px; background:#fbfbfb;}
+.modaltrafego form .title{font-size:20px; text-transform:uppercase; color:#CCC; margin:0 10px 0 0;}
+.modaltrafego form label input{padding:5px; width:100px; text-align:center; font-size:18px; margin:0 10px;}
+.modaltrafego form label span{font-size:20px; text-transform:uppercase;}
+.modaltrafego form .btn{padding:9px; margin-left:10px; text-transform:uppercase; position:relative; top:-2px; background:#09F; cursor:pointer; color:#fff; border:1px solid #06F;}
+.modaltrafego form .btn:hover{border-color:#00C; background:#06F;}
+.modaltrafego form img{float:right; margin-top:4px;}
+.modaltrafego .relatorio{float:left; max-height:356px; overflow:scroll; overflow-x:hidden; list-style:none; width:800px; padding:30px 30px 0; border-top:1px solid #ccc;}
+.modaltrafego .relatorio li{float:left; color:#666; width:800px; text-align:center; border-bottom:1px solid #CCC; border-left:1px solid #CCC;}
+.modaltrafego .relatorio li:hover{background:#069; color:#fff; -webkit-transition:none; -moz-transition:none; -o-transition:none; transition:none;}
+.modaltrafego .relatorio li:hover strong{color:#09F;}
+.modaltrafego .relatorio li strong{font-weight:600; color:#666;}
+.modaltrafego .relatorio .title{background:#06F; border-color:#069; color:#FFF; font-weight:bold; text-transform:uppercase; font-size:14px;}
+.modaltrafego .relatorio .title span{border-color:#069;}
+.modaltrafego .relatorio .color{background:#F2F2F2;}
+.modaltrafego .relatorio li span{float:left; width:179px; padding:10px; border-right:1px solid #CCC;}
+
+
 /*  POSTS  */
 .posts{float:left; width:1000px;}
 .posts .paginator {float:left; width:960px; padding:20px; background:#09F; margin-bottom:10px; list-style: none}
