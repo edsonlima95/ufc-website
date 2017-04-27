@@ -48,12 +48,7 @@
                 $countSub = count($readCatCount->getResultado());
              ?>
                 <li class="li" id="<?=$id?>">
-                   <?php
-                   //Verifica na pasta, se nao tiver nao exibe a img
-                   if(file_exists('../uploads/'.$capa) && !is_dir('../uploads/'.$capa)):                       
-                        echo '<img src="../tim.php?src=../uploads/'.$capa.'&w=120&h=120" />';
-                   endif;
-                   ?>
+                    <img src="../tim.php?src=../uploads/<?php if(!isset($resultSub['capa'])): echo 'padrao.png';else: echo $resultSub['capa']; endif;?>&w=120&h=120" />';
                     <div class="info" style="width:636px;">
                         <p class="title"><?= $nome ?></p>
                         <p class="resumo"><?= $descricao ?></p>
@@ -81,13 +76,8 @@
                 $readPostCount->ExeRead('posts', "WHERE sub_categoria =:sub", "sub={$resultSub['id']}");
                 $countPost = count($readPostCount->getResultado());
                 ?>
-                    <li class="li subli" id="<?=$resultSub['id']?>">
-                        <?php
-                        //Verifica na pasta, se nao tiver nao exibe a img
-                        if(file_exists('../uploads/'.$resultSub['capa']) && !is_dir('../uploads/'.$resultSub['capa'])):                       
-                             echo '<img src="../tim.php?src=../uploads/'.$resultSub['capa'].'&w=120&h=120" />';
-                        endif;
-                        ?>
+                    <li class="li subli" id="<?=$resultSub['id']?>">                 
+                        <img src="../tim.php?src=../uploads/<?php if(!isset($resultSub['capa'])): echo 'padrao.png';else: echo $resultSub['capa']; endif;?>&w=120&h=120" />';
                         <div class="info" style="width:636px;">
                             <p class="title"><?= $resultSub['nome']; ?></p>
                             <p class="resumo"><?= $resultSub['descricao']; ?></p>

@@ -1,4 +1,58 @@
 $(function(){
+    
+        var url = 'http://localhost/proJquery/projeto/j_php/home.php';
+    
+        //Efeito destaqus.
+        $('.j_destaq').click(function () {
+        var manipula = $('.bloco_dois .arts');
+        
+        //Muda as cor
+        $(this).css('background-color','rgb(120,56,74)');
+        $('.navbldois .j_deolho').css('background-color','rgba(14,60,73,0.7)');
+        
+        //Da um efeito transparente, e envia para a consulta.
+        manipula.fadeTo(500,0.2, function () {
+                $.post(url,{acao: 'destaques'}, function (res) {
+                   manipula.html(res);
+                    //Coloca na fila, pois o html nao tem callback.
+                    manipula.queue(function () {
+                         manipula.fadeTo(500,1);
+                    });
+                     manipula.dequeue();
+                });
+           });
+        });
+        
+        //Efeito de olho
+        $('.j_deolho').click(function () {
+        var manipula = $('.bloco_dois .arts'); 
+        //Muda as cor
+        $(this).css('background-color','rgb(14,60,73)');
+        $('.navbldois .j_destaq').css('background-color','rgba(120,56,74,0.7)');
+       
+        //Da um efeito transparente.
+        manipula.fadeTo(500,0.2, function () {
+                $.post(url,{acao: 'deolho'}, function (res) {
+                    manipula.html(res);
+                    //Coloca na fila, pois o html nao tem callback.
+                    manipula.queue(function () {
+                         manipula.fadeTo(500,1);
+                    });
+                     manipula.dequeue();
+                });
+            });
+        });
+        
+        //Esconde o Footer
+	$('#footer').hide();
+	
+	//height da box
+	$('.bloco').each(function(){
+		var altura = $(window).height();
+		altura = altura - 110;
+		$(this).css('min-height',altura);
+	});
+    
 	//slide
 	$('.slidequery img').hide();
 	$('.slidequery').cycle({ 
@@ -27,7 +81,7 @@ $(function(){
 	
 	//marcando atual
 	var menuid = $('.navtopo li');
-	var menuit = menuid.find('a');
+	var menuit = menuid.find('.a');
 	
 	var navit = menuit.map(function(){
 		var cadait = $($(this).attr("href"));

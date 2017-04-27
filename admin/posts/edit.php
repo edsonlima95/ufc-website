@@ -1,5 +1,4 @@
 <div class="content home">
-    <h1 class="location"><strong>Editar Post:</strong> Shael Sonnen e Anderson Silva Spider se enfrentam no UFC.</h1><!--/location-->
     <?php
     //Pega o id do post.
     $idpost = $_GET['idpost'];
@@ -12,6 +11,7 @@
         extract($readPost->getResultado()[0]);
     endif;
     ?>
+    <h1 class="location"><strong>Editar Post:</strong><?= $titulo ?></h1><!--/location-->
     <div class="posts">
         <form name="editpost" class="formfull" action="" method="post" enctype="multipart/form-data">
 

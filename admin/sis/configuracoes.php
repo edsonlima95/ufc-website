@@ -11,6 +11,7 @@ funcoes::superUser();
             <li><a href="config_email" title="E-mail de envio">Servidor de e-mail</a></li>
             <li><a href="config_seo" title="Otimizar Home">Otimizar Home</a></li>
             <li><a href="config_endereco" title="Modulo de Endereço">Endereço e Telefone</a></li>
+            <li><a href="config_temas" title="Modulo de Temas">Temas</a></li>
         </ul><!--/navega-->
 
         <!-- //FORM CONFIG MANUTENÇÃO -->
@@ -132,7 +133,67 @@ funcoes::superUser();
                 <input type="submit" value="Otimizar Site" class="btn" /> 
                 <img src="img/loader.gif" class="load" alt="Carregando..." title="Carregando..." />          
             </fieldset>     
-        </form>       
+        </form>     
+        
+        <!-- //FORM CONFIG TEMAS -->
+        <form name="config_temas" action="" method="post">      
+            <?php
+             //Ler a tabela de configuração de endereço.
+            $readTemas = new read();
+            $readTemas->ExeRead('config_tema',"ORDER BY data_creacao DESC");
+            
+            if($readTemas->getResultado()):
+            echo '<table class="temas">';
+                echo '<tr class="titulo">
+                          <th>Tema:</th>
+                          <th>Pasta:</th>
+                          <th>Data:</th>
+                          <th>Ação</th>
+                    </tr>';
+                foreach ($readTemas->getResultado() as $resTema):
+                    
+                //Pasta
+                $pasta = '../temas/'.$resTema['pasta'];
+                //Verifica se existe a pasta.
+                $verifica = (file_exists($pasta) && is_dir($pasta) ? 1 : 0);
+                $tipo = ($verifica ? '<strong style="color: green">&radic;</strong>' : '<strong style="color: red">&Chi;</strong>'); 
+            ?>
+            <tr id="<?=$resTema['id']?>" <?php if($resTema['inuse']) echo 'style="background: #09F"';?>>
+                <td><?=$resTema['nome']?></td>
+                <td><?= $tipo.' - '.$resTema['pasta']?></td>
+                <td><?=date('d/m/Y H:i',$resTema['data_creacao']);?></td>
+                <?php
+                //Se tiber ativo e existir na pasta pode ativar e desativar.
+                if(!$resTema['inuse'] && $verifica):
+                      echo '<td><a href="#" title="Ativa tema: '.$resTema['nome'].'" id="'.$resTema['id'].'" class="j_ativatema">ATIVA TEMA</a></td>';
+                elseif(!$verifica)://Se nao existir a pasta e se nao estiver em uso.
+                      echo '<td><a href="#" title="Deletar tema'.$resTema['nome'].'" id="'.$resTema['id'].'" class="j_deletatema">DELETAR TEMA</a></td>';
+                else:
+                    echo '<td style="font-weight: 600; color: #0011e0;">ATIVO</td>';
+                endif;
+                ?>
+            </tr>       
+             <?php
+                   endforeach;
+                echo '</table>';
+            endif;
+            ?>
+            <fieldset>
+                <legend>Endereço/Telefone:</legend>
+                <label class="label">
+                    <span class="field">Nome:</span>
+                    <input type="text" name="nome" />                  
+                </label>
+                
+                <label class="label">
+                    <span class="field">Pasta:</span>
+                    <input type="text" name="pasta" />                
+                </label>
+
+                <input type="submit" value="Otimizar Site" class="btn" /> 
+                <img src="img/loader.gif" class="load" alt="Carregando..." title="Carregando..." />          
+            </fieldset>     
+        </form>    
 
     </div><!--/configs -->
 

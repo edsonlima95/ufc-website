@@ -66,7 +66,7 @@
                             </span>
                         </div><!--/info-->
                         <ul class="sub">
-                            <li><strong><?= $visitas ?></strong> visitas</li>
+                            <li><strong><?php if(empty($visitas)) echo 0; else echo $visitas; ?></strong> visitas</li>
                             <li><strong><?= $countCom ?></strong> comentários</li>';
                         </ul>
                     </li>

@@ -91,3 +91,37 @@ function setViews($topicoId) {
     );
     update('up_posts', $dataViews, "id = '$topicoId'");
 }
+
+function getSeo() {
+    //IMAGEM
+$metaImage = ($metaImage != '' ? BASE.'/uploads/'.$metaImage : BASE.'/tpl/images/siteavatar.png');
+
+//SEO
+$metaInfo = array(
+	'title' 		=> SITENAME,
+	'description' 	=> SITEDESC,
+	'url' 			=> BASE,
+	'image'			 => $metaImage
+);
+
+//NORMAL PAGE
+echo '<title>'.lmWord($metaInfo['title'],'70').'</title> ';
+echo '<meta name="description" content="'.lmWord($metaInfo['description'],'160').'"/>';
+
+//FACEBOOK
+echo '<meta property="og:title" content="'.$metaInfo['title'].'" />';
+echo '<meta property="og:url" content="'.$metaInfo['url'].'" />';
+echo '<meta property="og:image" content="'.$metaInfo['image'].'" />';
+echo '<meta property="og:site_name" content="'.SITENAME.'" />';
+echo '<meta property="og:description" content="'.$metaInfo['description'].'" />';
+echo '<meta property="og:locale" content="pt_BR" />';
+
+//ITEM GROUP (TWITTER)
+echo '<meta itemprop="name" content="'.$metaInfo['title'].'">';
+echo '<meta itemprop="description" content="'.$metaInfo['description'].'">';
+echo '<meta itemprop="url" content="'.$metaInfo['url'].'">';
+
+//ROBOS AND FALLOW
+echo '<meta name="robots" content="index, follow" />';
+echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
+}

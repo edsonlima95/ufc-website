@@ -1,15 +1,80 @@
 $(function(){
+    
+        //Efeito do sub-menu.
+        $('.navtopo li').mouseover(function () {
+            $(this).find('.submenu').fadeIn('fast');
+        }).mouseleave(function () {
+            $(this).find('.submenu').fadeOut('fast');
+        });
+        
+        $('.navtopo .subopen').click(function () {
+         return false;
+        });
+        
+        //Paginacao de resultados categoria.
+        $('.j_catpag').on('click','.paginator a', function () {
+            if($(this).hasClass('atv')){
+                return false;
+            }else{
+                $('.j_catpag .paginator a').removeClass('atv');
+                $(this).addClass('atv');
+                
+                var urlaction = '../j_php/home.php';
+                var url = $(this).attr('href');
+                var data = url.lastIndexOf('/')+1;
+                //Recupera o numero da pagina, passado na utl.
+                var data = url.substr(data);
+
+               $('.j_catpag ul').fadeTo(500,0.2);
+
+               $.post(urlaction, {acao: 'cat_paginacao', page: data}, function (res) {
+                   $('html, body').delay(700).animate({scrollTop: $('h2').offset().top - 40}, 500);
+                   window.setTimeout(function () {
+                        $('.j_catpag').html(res);
+                        $('.j_catpag ul').fadeTo(500,1);
+                   },700);
+               });
+           }
+           return false; 
+        });
+        
+        
+        //Pesquisa.
+        $('form[name="search"]').submit(function () {
+            var word = $(this).find('input[name="s"]').val();
+            if(!word){
+                myDial('alert','Insira uma palavra a ser pesquisada!');
+            }else{
+                var compara = $('.j_search');
+                //Se estiver na pagina de pesquisa nao envia para o link.
+                if(compara.is(':visible')){
+                   
+                    var t = $(document).attr('title');
+                    //Altera o titulo da pagina.
+                    $(document).attr('title',t+' | Pesquisa por: ' +word);
+                    //Alerta o nome da pesquisa.
+                    $('.bloco_um').find('h1').text('Pesquisa:'+word);
+                    //Altera no conteudo.
+                    $('.bloco_um').find('h2 strong').text(word);
+                    
+                    $('.j_search ul').fadeTo(500,0.2);
+                   
+                    $.post('../j_php/home.php', {acao: 'search', word: word}, function (res) {
+                        $('html, body').delay(700).animate({scrollTop: $('h2').offset().top - 40}, 500);
+                        window.setTimeout(function () {
+                            $('.j_search').html(res);
+                            $('.j_search ul').fadeTo(500,1);
+                         },700);
+                    });
+                }else{
+                   $(location).attr('href','http://localhost/proJquery/projeto/pesquisa/'+word);
+                }
+            }
+            return false;
+        });
+        
+        
 	Shadowbox.init();
-	
-	//Esconde o Footer
-	$('#footer').hide();
-	
-	//height da box
-	$('.bloco').each(function(){
-		var altura = $(window).height();
-		altura = altura - 110;
-		$(this).css('min-height',altura);
-	});
 	
 	//Navegacao Geral
 	$('.pagecontato').click(function(){
@@ -33,10 +98,10 @@ $(function(){
 	$('.dialog').hide();
 	
 	$('body').on('click','.closedial',function(){
-		$(this).parent().fadeOut("slow",function(){
-			$('.dialog').fadeOut("slow");
-		});	
-		return false;	
+            $(this).parent().fadeOut("slow",function(){
+                $('.dialog').fadeOut("slow");
+            });	
+            return false;	
 	});
 	
 	function myDial(clase,content){

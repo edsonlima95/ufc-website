@@ -55,6 +55,7 @@ $(function () {
     Shadowbox.init();
     
     //Mascaras de inputs.
-    $(".formDate").mask("99/99/9999 99:99:99", {placeholder: " "});
-    $(".formTel").mask("(99) 99999-9999", {placeholder: " "});
+    $(".formDate").mask("99/99/9999 99:99:99");
+    $(".formDate2").mask("99/99/9999");
+    $(".formTel").mask("(99) 99999-9999");
 });

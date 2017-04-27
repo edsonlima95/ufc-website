@@ -1,65 +1,34 @@
 <script type="text/javascript" src="<?php setHome();?>/tpl/js/jshome.js"></script>
 
-<?php
-//IMAGEM
-$metaImage = ($metaImage != '' ? BASE.'/uploads/'.$metaImage : BASE.'/tpl/images/siteavatar.png');
-
-//SEO
-$metaInfo = array(
-	'title' 		=> SITENAME,
-	'description' 	=> SITEDESC,
-	'url' 			=> BASE,
-	'image'			 => $metaImage
-);
-
-//NORMAL PAGE
-echo '<title>'.lmWord($metaInfo['title'],'70').'</title> ';
-echo '<meta name="description" content="'.lmWord($metaInfo['description'],'160').'"/>';
-
-//FACEBOOK
-echo '<meta property="og:title" content="'.$metaInfo['title'].'" />';
-echo '<meta property="og:url" content="'.$metaInfo['url'].'" />';
-echo '<meta property="og:image" content="'.$metaInfo['image'].'" />';
-echo '<meta property="og:site_name" content="'.SITENAME.'" />';
-echo '<meta property="og:description" content="'.$metaInfo['description'].'" />';
-echo '<meta property="og:locale" content="pt_BR" />';
-
-//ITEM GROUP (TWITTER)
-echo '<meta itemprop="name" content="'.$metaInfo['title'].'">';
-echo '<meta itemprop="description" content="'.$metaInfo['description'].'">';
-echo '<meta itemprop="url" content="'.$metaInfo['url'].'">';
-
-//ROBOS AND FALLOW
-echo '<meta name="robots" content="index, follow" />';
-echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
-?>
 </head>
 
 <!--body -->
 <body>
-
+    <div class="dialog"></div><!--Mensagens.-->
+    <div class="body"></div><!--Efeitos.-->
 <?php 
-	setArq('tpl/sidebars/modais');
-	setArq('tpl/sidebars/slider');
-	setArq('tpl/sidebars/header');	
+    setArq('tpl/sidebars/slider');
+    setArq('tpl/sidebars/header');	
+    $read = new read();
 ?> 
   
 <!-- BLOCO SITE GERAL HOME -->
 <div id="site">
 <div class="home">
-
-
-
+    
 <!-- BLOCO UM - h1. h2. Img Topo -->
 <div class="bloco_um">
-    <h1>Home</h1>
-    <h2>Confira conteúdo de primeira aqui no MyContent da Up. Aqui você confere os melhores vídeos e artigos da internet!</h2>
-
+    <h1><?=SITENAME?></h1>
+    <h2><?= SITEDESC?></h2>
+    <?php
+    $read->ExeRead('posts',"WHERE status = 1 ORDER BY visitas DESC LIMIT 1");
+    $resViewVisto = $read->getResultado()[0];
+    ?>
     <div class="capa">
-        <img src="<?php setHome();?>/tpl/_tmp/02.png" />
-        <a href="<?php setHome();?>/ver/shael-sonnen-x-spidder-quem-leva">
-            SHAEL SONNEN X SPIDDER, QUEM LEVA?
-            <p>Confira conteúdo de primeira aqui no MyContent da Up.</p>
+        <img src="<?php setHome();?>/tim.php?src=uploads/<?=$resViewVisto['capa']?>&w=200&h=200" alt="<?=$resViewVisto['titulo']?>"/>
+        <a href="<?= BASE.'/ver/'.$resViewVisto['nome']?>">
+            <?= funcoes::limtarTextos($resViewVisto['titulo'],42)?>
+            <p><?= funcoes::limtarTextos($resViewVisto['conteudo'],50)?></p>
         </a>
     </div><!-- /capa -->
 </div><!-- /BLOCO UM -->
@@ -69,20 +38,28 @@ echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
 <div class="bloco_dois">
     
     <ul class="navbldois">
-        <li class="destaq">DESTAQUES!</li>
-        <li class="deolho">DE OLHO!</li>
+        <li class="destaq j_destaq">DESTAQUES!</li>
+        <li class="deolho j_deolho">DE OLHO!</li>
     </ul>       
 
     <div class="content"> 
                     
         <ul class="arts">
-        <?php for($i=1;$i<=4;$i++):?>
+        <?php 
+        //Ler os posts. 
+        $readPost = clone $read;
+        $readPost->ExeRead('posts',"WHERE status = 1 ORDER BY data_creacao DESC LIMIT 4 OFFSET 4");
+        foreach ($readPost->getResultado() as $resPosts):
+           $i++;
+        ?>
             <li <?php if($i%2==0) echo 'style="float:right;"';?>>
-                <img src="<?php setHome();?>/tpl/_tmp/03.png" />
-                <a href="<?php setHome();?>/ver">SHAEL SONNEN X SPIDDER, QUEM LEVA?</a>
-                <p>Confira conteúdo de primeira aqui no MyContent da Up.</p>
+                <img src="<?= BASE.'/tim.php?src=uploads/'.$resPosts['capa']?>&w=100&h=100" alt="<?=$resPosts['titulo']?>"/>
+                <a title="<?=$resPosts['titulo']?>" href="<?= BASE.'/ver/'.$resPosts['nome']?>"><?= funcoes::limtarTextos($resPosts['titulo'], 40)?></a>
+                <p><?= funcoes::limtarTextos($resPosts['conteudo'], 60)?></p>
             </li>
-        <?php endfor;?>
+        <?php
+         endforeach;
+        ?>
         </ul><!-- /arts -->  
                          
     </div><!-- /content -->                    
@@ -95,16 +72,27 @@ echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
         <h2>Vídeos</h2>
         
         <ul class="videos">
-        <?php for($i=1;$i<=3;$i++):?>
+         <?php 
+        //Ler a categoria, e pega o id.
+        $readCat = clone $read;
+        $readCat->ExeRead('categorias',"WHERE nome = :nome","nome=videos");
+        $resCatVideos = $readCat->getResultado()[0];
+        
+        //Ler os posts de acordo com o id categoria 
+        $readPosts = clone $read;
+        $readPosts->ExeRead('posts',"WHERE sub_categoria = :sub ORDER BY data_creacao DESC LIMIT :limit OFFSET :offset","sub={$resCatVideos['id']}&limit=3&offset=0");
+        foreach ($readPosts->getResultado() as $resVideos):
+           $i++;
+        ?>
             <li<?php if($i%3==0) echo ' style="float:right; margin-right:0"';?>>
-                <img src="<?php setHome();?>/tpl/_tmp/04.png" />
+                <img src="<?= BASE.'/tim.php?src=uploads/'.$resVideos['capa']?>&w=300&h=150" alt="<?=$resVideos['titulo']?>"/>
                 <div class="licontent">
-                    <a href="<?php setHome();?>/ver">SHAEL SONNEN X SPIDDER, QUEM LEVA?</a>
-                    <p>Confira conteúdo de primeira aqui no MyContent da Up. Aqui você confere os melhores vídeos e artigos da internet!</p>
+                    <a title="<?=$resVideos['titulo']?>" href="<?= BASE.'/ver/'.$resVideos['nome']?>"><?= funcoes::limtarTextos($resVideos['titulo'],40)?></a>
+                    <p><?= funcoes::limtarTextos($resVideos['conteudo'],100)?></p>
                 </div><!-- /content -->
             </li>
-        <?php endfor;?>
-        <li class="readmore"><a href="<?php setHome();?>/categoria" title="Ver vídeos na MyContent">VEJA +</a></li>
+        <?php endforeach;?>
+        <li class="readmore"><a href="<?= BASE.'/categoria/'.$resCatVideos['url']?>" title="Ver <?=$resCatVideos['nome']?>">VEJA +</a></li>
         </ul>
         
     </div><!-- /content -->
@@ -115,22 +103,35 @@ echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
 <div id="artigos" class="bloco_quatro">
     <div class="content">
         <h2>Artigos</h2>
+        <?php
+        //Ler a categoria, e pega o id.
+        $readGeral = clone $read;
+        $readGeral->ExeRead('categorias',"WHERE nome = :nome","nome=geral");
+        $resGeral = $readGeral->getResultado()[0];
         
+        $readPosts->setPlaces("sub={$resGeral['id']}&limit=1&offset=0");    
+        $resPostGeral = $readPosts->getResultado()[0];
+        ?>
         <div class="destaq">
-            <img src="<?php setHome();?>/tpl/_tmp/05.png" />
-            <a href="<?php setHome();?>/ver">SHAEL SONNEN X SPIDDER, QUEM LEVA?</a>
-            <p>Confira conteúdo de primeira aqui no MyContent da Up. Aqui você confere os melhores vídeos e artigos da internet!</p>
+            <img src="<?= BASE.'/tim.php?src=uploads/'.$resPostGeral['capa']?>&w=300&h=300" alt="<?= $resPostGeral['titulo']?>" />
+            <a href="<?= BASE.'/ver/'.$resPostGeral['nome']?>"><?= funcoes::limtarTextos($resPostGeral['titulo'], 32)?></a>
+            <p><?= funcoes::limtarTextos($resPostGeral['conteudo'], 100)?></p>
         </div>
         
         <ul class="artigos">
-        <?php for($i=1;$i<=3;$i++):?>
+        <?php 
+        $readPosts->setPlaces("sub={$resGeral['id']}&limit=3&offset=1");    
+        foreach ($readPosts->getResultado() as $res):
+        ?>
             <li>
-                <img src="<?php setHome();?>/tpl/_tmp/06.png" />
-                <a href="<?php setHome();?>/ver">SHAEL SONNEN X SPIDDER, QUEM LEVA?</a>
-                <p>Confira conteúdo de primeira aqui no MyContent da Up.</p>
+                 <img src="<?= BASE.'/tim.php?src=uploads/'.$res['capa']?>&w=100&h=100" alt="<?= $res['titulo']?>" />
+                <a href="<?= BASE.'/ver/'.$res['nome']?>"><?= funcoes::limtarTextos($res['titulo'], 32)?></a>
+                <p><?= funcoes::limtarTextos($res['conteudo'], 100)?></p>
             </li>
-        <?php endfor;?>
-        	<li class="readmore"><a href="<?php setHome();?>/categoria" title="Ler artigos na MyContent">LEIA +</a></li>
+        <?php 
+        endforeach;
+        ?>
+        	 <li class="readmore"><a href="<?= BASE.'/categoria/'.$resGeral['url']?>" title="Ver <?=$resGeral['nome']?>">LEIA +</a></li>
         </ul>
         
     </div><!-- /content -->

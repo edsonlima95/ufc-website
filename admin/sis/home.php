@@ -51,14 +51,42 @@
                         <span class="users">Usuários</span>
                         <span class="pages">PageViews</span>
                     </li>
-                    <?php for ($i = 1; $i <= 6; $i++): ?>
+                   <?php
+                    $readEstatisticasHome = new read();
+                    $readEstatisticasHome->ExeRead('siteviews', "ORDER BY data DESC LIMIT 7");
+                    if ($readEstatisticasHome->getResultado()):
+                        foreach ($readEstatisticasHome->getResultado() as $resEstHome):
+                        $i++;
+                        $res = ($resEstHome['pageviews']/$resEstHome['usuarios'])
+                        ?>
                         <li<?php if ($i % 2 == 0) echo ' class="color"'; ?>>
-                            <span class="date"><strong>04/2013</strong></span>
-                            <span class="views">1890</span>
-                            <span class="users">1190</span>
-                            <span class="pages">2.8</span>
+                            <span class="date"><strong><?= date('d-m-Y', strtotime($resEstHome['data']))?></strong></span>
+                            <span class="views"><?=$resEstHome['visitas']?></span>
+                            <span class="users"><?=$resEstHome['usuarios']?></span>
+                            <span class="pages"><?= ceil($res)?></span>
                         </li>
-                    <?php endfor; ?>
+                        <?php
+                        //Somo os valores direto no loop, apenos dos sete primeiros.
+                        $resVisitasHome += $resEstHome['visitas'];
+                        $resUsusariosHome += $resEstHome['usuarios'];
+                        $resPageHome += $resEstHome['pageviews'];
+                        endforeach;
+                        $pagesHome = ($resPageHome/$resUsusariosHome);
+                    endif;
+                    ?>
+                        
+                    <li class="title">
+                        <span class="date">TOTAL</span>
+                        <span class="views">Visitas</span>
+                        <span class="users">Usuários</span>
+                        <span class="pages">PageViews</span>
+                    </li>
+                    <li>
+                        <span class="date"><strong>7 DIAS</strong></span>
+                        <span class="views"><?=$resVisitasHome?></span>
+                        <span class="users"><?=$resUsusariosHome?></span>
+                        <span class="pages"><?= ceil($pagesHome)?></span>
+                    </li>
                 </ul><!--/relatorio-->
             </div><!--/content-->
         </div><!--/estatisticas-->

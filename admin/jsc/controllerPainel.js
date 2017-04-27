@@ -184,6 +184,79 @@ $(function () {
         });
         return false;
     });
+    
+    //CONFIGURAÕES DE TEMAS.
+    
+     //Ler a tabela apos ser cadastrados os dados.
+     function lerTemas(){
+        $.post('j_php/painel.php',{acao: 'ler_temas'}, function (res) {
+            $('.temas').fadeTo(500,0.2, function () {
+                $(this).html(res);
+                $(this).queue(function () {
+                    $(this).fadeTo(500,1,);
+                });
+                $(this).dequeue();
+            });
+        });
+    }
+    //Cadastra o tema.
+    $('form[name=config_temas]').submit(function () {
+        //Encapsula o formulario e os dados.
+        var form = $(this);
+        var dados = $(this).serialize() + '&acao=cadastro_temas';
+
+        //Envia os dados.
+        $.ajax({
+            url: "j_php/painel.php",
+            type: 'POST',
+            data: dados,
+            beforeSend: function () {
+                //Pego o load apenas deste formulario especifico, pois todos os form tem o mesmo load.
+                form.find('.load').fadeIn('fast');
+            },
+            success: function (res) {
+                if (res == 'campos_branco_tema') {
+                    msg('branco_campos_tema', 'alert', 'Preencha todos os campos antes de cadastrar os dados!');
+                }else{
+                    msg('tema_sucesso', 'accept', 'Os dados foram cadastrados com sucesso!');
+                    lerTemas();
+                }
+            },
+            complete: function () {
+                form.find('.load').fadeOut('fast');
+            }
+        });
+        return false;
+    });
+    
+    //Ativa o tema.
+    $('.temas').on('click','.j_ativatema',function () {
+        var idtema = $(this).attr('id');
+        
+        $.post('j_php/painel.php',{acao: 'ativa_tema', id: idtema}, function (res) {
+            lerTemas();
+        });
+        
+        //Envia os dados.
+        return false;
+    });
+    
+    //Deleta o tema.
+    $('.temas').on('click','.j_deletatema',function () {
+        var idtema = $(this).attr('id');
+        
+        $.post('j_php/painel.php',{acao: 'deleta_tema', id: idtema}, function (res) {
+            if(res == 'erroractive'){
+                 msg('tema_branco', 'error', 'Opsss, tema esta em uso, não pode ser deletado!');
+            }else{
+                $('.temas tr[id='+idtema+']').fadeOut('slow');
+            }
+        });
+        
+        //Envia os dados.
+        return false;
+    });
+   
 
     /*************************************************
      *CONFIGURAÇÕES DE USUARIOS, DO SITE
@@ -398,7 +471,6 @@ $(function () {
                 form.find('.load').fadeIn('fast');
             },
             success: function (res) {
-                alert(res);
                 if (res == 'campos_branco') {
                     msgDial('error_campos', 'alert', 'O campo categoria não pode ficar em branco!');
                 } else if (res == 'catexiste') {
@@ -412,7 +484,7 @@ $(function () {
 
                     //Redireciona.
                     window.setTimeout(function () {
-                        $(location).attr('href', 'dashboard.php?exe=categorias/edit&idcat=' + res);
+                        $(location).attr('href', 'dashboard.php?exe=categorias/edit&edita=' + res);
                     }, 2000);
                 }
             },
@@ -453,7 +525,6 @@ $(function () {
                 });
             },
             success: function (res) {
-
                 if (res == 1) {
                     msg('cat_error_size', 'alert', 'Porfavor insira um arquivo de até 2MB');
                 } else if (res == 2) {
@@ -468,10 +539,10 @@ $(function () {
                 }
             },
             complete: function () {
-
                 //Some com a barra e reset os valores.
                 bar.fadeOut('slow', function () {
                     per.width('0%').text('0%');
+                    window.location.reload();
                 });
             }
         });
@@ -529,7 +600,6 @@ $(function () {
                 form.find('.load').fadeIn('fast');
             },
             success: function (res) {
-                alert(res);
                 if (res == 'campos_branco') {
                     msgDial('error_campos_post', 'alert', 'Porfavor preencha todos os campos!');
                 } else {
@@ -541,6 +611,7 @@ $(function () {
 
                     //Redireciona.
                     window.setTimeout(function () {
+                        form.find('input[name="titulo"]').val('');
                         $(location).attr('href', 'dashboard.php?exe=posts/edit&idpost=' + res);
                     }, 2000);
                 }
@@ -615,7 +686,8 @@ $(function () {
                     });
                 }
             },
-            success: function() {
+            success: function(res) {
+             
                 //Se nao tiver os arquivso mostra so a mensagem sem o load.
                $('.dialog').fadeIn('fast', function () {
                         //Abri o modal de load dos arquivos.
@@ -682,6 +754,35 @@ $(function () {
      * HOME
      *****************************************/
     $('form[name=geradados]').submit(function () {
+        
+        //Encapsula o formulario e os dados.
+        var form = $(this);
+        var dados = $(this).serialize() + '&acao=relatorio';
+
+        //Envia os dados.
+        $.ajax({
+            url: "j_php/painel.php",
+            type: 'POST',
+            data: dados,
+            beforeSend: function () {
+                //Pego o load apenas deste formulario especifico, pois todos os form tem o mesmo load.
+                form.find('.load').fadeIn('fast');
+            },
+            success: function (res) {
+                alert(res);
+                if (res == 'campos_branco') {
+                    msgDial('error_relatorio_branco', 'alert', 'Porfavor preencha todos os campos!');
+                }else if (res == 'notfound'){
+                    msgDial('not_found', 'alert', 'Não contem registro entre o periodo informado!');
+                }else{
+                    $('.j_relatorio').html(res);
+                }
+            },
+            complete: function () {
+                form.find('.load').fadeOut('fast');
+            }
+        });
+        
         return false;
     });
     

@@ -1,6 +1,6 @@
 <div class="content home">
     <?php
-    $idcat = filter_input(INPUT_GET, 'idcat', FILTER_VALIDATE_INT);
+    $idcat = filter_input(INPUT_GET, 'edita', FILTER_VALIDATE_INT);
     $readCat = new read();
     $readCat->ExeRead('categorias', 'WHERE id = :id', "id={$idcat}");
     if (!$readCat->getResultado()):

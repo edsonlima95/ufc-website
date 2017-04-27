@@ -46,7 +46,7 @@ a{border:none; margin:0;}
 .dialog .error .tt{padding-left:45px; background:url(../images/ms_icon_error.png) center left no-repeat;}
 
 /*  SLIDE HOME  */
-.homeslide{display:block; overflow:hidden; position:relative; border-bottom:12px solid #072F3B; float:left; width:100%; background:#000 url(../images/loader.gif) left 10px top 10px no-repeat;}
+.homeslide{display:block; overflow:hidden; position:relative; border-bottom:12px solid #072F3B; float:left; width:100%;}
 .homeslide li{float:left; width:100%; height:350px; overflow:hidden; position:relative;}
 .homeslide li .info{position:absolute; left:0px; bottom:0px; z-index:99; background:rgba(0,0,0,0.7); width:100%; color:#fff;}
 .homeslide li .info .content{width:1000px; margin:0 auto; padding:20px 0;}
@@ -65,11 +65,17 @@ a{border:none; margin:0;}
 #header .content{width:1000px; margin:0 auto;}
 #header .content .logo{float:left; padding:30px 30px 20px; background:rgba(0,102,255,0.5); position:absolute;}
 
-#header .content .navtopo{float:left; margin-left:280px; list-style:none;}
+#header .content .navtopo{float:left; margin-left:256px; list-style:none; position: relative}
 #header .content .navtopo li{float:left;}
 #header .content .navtopo li a{float:left; padding:10px 25px; font-size:28px; color:#FFF; text-decoration:none;}
 #header .content .navtopo li a:hover{background:rgba(0,64,128,0.7)}
+#header .content .navtopo li:hover{background:rgba(0,64,128,0.7)}
 #header .content .navtopo .active{background:rgba(255,32,32,0.5);}
+
+#header .content .navtopo li .submenu {position: absolute; display: none;  background: #fff; width: 250px; padding: 10px; left: 143px; top: 55px; z-index: 99; list-style: none}
+#header .content .navtopo li .submenu li {background: blue; margin-bottom: 3px;}
+#header .content .navtopo li .submenu li a {width: 230px; padding: 10px; text-align: center; }
+
 
 #header .content form{float:right; background:#fbfbfb; margin:8px 0;}
 #header .content form input{padding:10px; border:none; text-transform:uppercase;}
@@ -149,9 +155,13 @@ a{border:none; margin:0;}
 .footer{width:100%; display:block; background:#069; border-top:12px solid #072F3B; position:fixed; bottom:0px; left:0px;}
 .footer .content{width:1000px; margin:0 auto; padding:10px 0;}
 .footer .content .logo{float:right; margin:5px 0;}
-.footer .content .navtopo{float:left; margin:2px 0;}
+.footer .content .navtopo{float:left; margin:2px 0; position: relative}
 .footer .content .navtopo li{float:left; list-style:none;}
 .footer .content .navtopo li a{float:left; padding:10px 20px; background:#fbfbfb; text-transform:uppercase; font-size:20px;}
 .footer .content .navtopo li a{text-decoration:none; color:#06F;}
 .footer .content .navtopo li a:hover{background:#005782; color:#FFF;}
 .footer .content .navtopo li .active{background:rgba(255,32,32,0.5); color:#fff;}
+
+.footer .content .navtopo li .submenu {position: absolute; display: none;  background: #fff; width: 250px; padding: 10px; left: 63px; top: -167px; z-index: 99; list-style: none}
+.footer .content .navtopo li .submenu li {background: blue; margin-bottom: 3px;}
+.footer .content .navtopo li .submenu li a {width: 230px; padding: 10px; text-align: center; }

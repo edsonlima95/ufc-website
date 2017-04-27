@@ -29,9 +29,9 @@
 /*  POSTS  */
 .posts{float:left; width:1000px;}
 .posts .paginator {float:left; width:960px; padding:20px; background:#09F; margin-bottom:10px; list-style: none}
-.posts .paginator ul li a{float:left; margin-right:10px; margin-top:5px; font-weight:bold; text-decoration:none; color:#039; font-size:25px;}
+.posts .paginator a{float:left; margin-right:10px; margin-top:5px; font-weight:bold; text-decoration:none; color:#039; font-size:25px;}
 .posts .paginator a:hover{color:#FFF;}
-.posts .paginator ul {list-style: none;}
+.posts .paginator {list-style: none;}
 .posts .paginator .paginator_form .load {display: none;}
 
 /*POST MODAL LOAD.*/
@@ -201,7 +201,7 @@
 .configs form fieldset .main {display: none}
 .configs form fieldset .main .load {display: none}
 .configs form fieldset legend{font-size:30px;}
-.configs form fieldset label{display:block; float:left; width:920px;}
+.configs form fieldset label{display:block; float:left; width:900px;}
 .configs form fieldset .field{display:block; margin-bottom:5px; font-weight:600; text-transform:uppercase; color:#999;}
 .configs form fieldset .label input, .configs form fieldset .label textarea{padding:8px; border:5px solid #CCC; margin-bottom:10px; width:400px;}
 
@@ -210,3 +210,10 @@
 .configs form .teste{background:green;}
 .configs form .teste:hover{background:#0F6;}
 .configs form .load{float:left; margin:26px 0 0 16px; display: none}
+
+table.temas {padding: 20px; background: #fbfbfb; margin-bottom: 20px; width: 960px; border-collapse: collapse;}
+table.temas tr th {width 916px; background: #069;  border: 3px solid #069; color: #fff; border-top: none}
+table.temas tr td {border: 3px solid #069; padding: 10px; font-size: 16px; text-align: center}
+table.temas tr:hover {background: #069; color: #fff}
+table.temas tr td a {padding: 5px 8px; color: #09F; font-weight: 600; background: #fff; text-decoration: none}
+table.temas tr td a:hover {background: #0011e0; color: #fff}

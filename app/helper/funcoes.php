@@ -47,7 +47,7 @@ class funcoes {
         self::$dados = substr($string, 0, $limite);
         self::$formato = strrpos(self::$dados, ' ');
         $texoCompleto = substr(self::$dados, 0, self::$formato);
-        $res = ($limite < $numWords ? $texoCompleto : $string);
+        $res = ($limite < $numWords ? $texoCompleto.'...' : $string);
         return $res;
     }
 

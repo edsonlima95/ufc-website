@@ -208,6 +208,93 @@ switch ($dados['acao']) {
         endif;
 
         break;
+        
+    case 'cadastro_temas';
+        unset($dados['acao']);
+        if(in_array('',$dados)):
+            echo 'campos_branco_tema';
+        else:
+        //Cadastra os dados.
+        $dados['data_creacao'] = date('Y-m-d H:i:s');
+        $create = new create();
+        $create->ExeCreate('config_tema', $dados);
+        endif;
+       
+    break;
+    
+    case 'ler_temas';
+        unset($dados['acao']);
+             //Ler a tabela de configuração de endereço.
+            $readTemas = new read();
+            $readTemas->ExeRead('config_tema',"ORDER BY data_creacao DESC");
+            
+            if($readTemas->getResultado()):
+                echo '<tr class="titulo">
+                          <th>Tema:</th>
+                          <th>Pasta:</th>
+                          <th>Data:</th>
+                          <th>Ação</th>
+                    </tr>';
+                foreach ($readTemas->getResultado() as $resTema):
+                    
+                //Pasta
+                $pasta = '../../temas/'.$resTema['pasta'];
+                //Verifica se existe a pasta.
+                $verifica = (file_exists($pasta) && is_dir($pasta) ? 1 : 0);
+                $tipo = ($verifica ? '<strong style="color: green">&radic;</strong>' : '<strong style="color: red">&Chi;</strong>'); 
+            ?>
+            <tr id="<?=$resTema['id']?>" <?php if($resTema['inuse']) echo 'style="background: #09F"';?>>
+                <td><?=$resTema['nome']?></td>
+                <td><?= $tipo.' - '.$resTema['pasta']?></td>
+                <td><?=date('d/m/Y H:i',$resTema['data_creacao']);?></td>
+                <?php
+                //Se tiber ativo e existir na pasta pode ativar e desativar.
+                if(!$resTema['inuse'] && $verifica):
+                      echo '<td><a href="#" title="Ativa tema: '.$resTema['nome'].'" id="'.$resTema['id'].'" class="j_ativatema">ATIVA TEMA</a></td>';
+                elseif(!$verifica)://Se nao existir a pasta e se nao estiver em uso.
+                      echo '<td><a href="#" title="Deletar tema'.$resTema['nome'].'" id="'.$resTema['id'].'" class="j_deletatema">DELETAR TEMA</a></td>';
+                else:    
+                     echo '<td style="font-weight: 600; color: #0011e0;">ATIVO</td>';
+                endif;
+                ?>
+            </tr>       
+             <?php
+                   endforeach;
+            endif;
+    break;
+    
+    case 'ativa_tema';
+        unset($dados['acao']);
+        
+        $reseta = array("inuse" => 0);
+        //Desativa o tea
+        $updateTemaUso = new update();
+        $updateTemaUso->ExeUpdate('config_tema', $reseta,"WHERE inuse = :uso","uso=1");
+        
+        //Ativa o tema.
+        $ativa = array("inuse" => 1);
+        $updateAtiva = clone $updateTemaUso;
+        $updateAtiva->ExeUpdate('config_tema', $ativa,"WHERE id = :id","id={$dados['id']}");
+
+        break;
+    
+    case 'deleta_tema';
+        unset($dados['acao']);
+            //id tema.
+            $idtema = $dados['id'];
+            
+            //Ler o tema referente ao id.
+            $readTema = new read();
+            $readTema->ExeRead('config_tema',"WHERE id = :id","id={$idtema}");
+            if($readTema->getResultado()):
+                if($readTema->getResultado()[0]['inuse']):
+                    echo 'erroractive';
+                else:
+                   $deltema = new delete();
+                   $deltema->ExeDelete('config_tema',"WHERE id = :id","id={$idtema}");
+                endif;
+            endif;
+        break;
 
     /*     * ***************************************
      * GESTÃO DE CATEGORIAS DO SITE
@@ -270,6 +357,9 @@ switch ($dados['acao']) {
 
         //Recebe o id pelo campo hidenn.
         $id = $dados['id'];
+        
+         $dados['data_creacao'] = funcoes::validaData($dados['data_creacao']);
+         $dados['url'] = funcoes::Name($dados['nome']);
 
         if ($img != null):
             //Verifica a se a imagem existe pega o caminho e deleta da pasta.
@@ -285,7 +375,7 @@ switch ($dados['acao']) {
             $uploadImagem = new files('../../uploads/');
             //esse time(), e pq ao ser atualizada a capa pelo ajax, o cach da antiga imagem continua e a miniatura nao mudava para a nova
             //Com o time ele garante que a img nao sera repetida e o cach sera atualizado, obs: so e preciso se for atualiza pelo ajax.
-            $uploadImagem->enviarImagem($img, funcoes::Name($dados['nome'] . '-' . time()));
+            $uploadImagem->enviarImagem($img, funcoes::Name($dados['nome'] . '-' . time()),0,'categorias');
 
             //Retorna o tipo de error, vindo do files.
             echo $uploadImagem->getErro();
@@ -294,9 +384,7 @@ switch ($dados['acao']) {
         if (isset($uploadImagem) && $uploadImagem->getResultado()):
             //Seta o caminho
             $dados['capa'] = funcoes::Name($uploadImagem->getResultado());
-            $dados['data_creacao'] = date('Y-m-d H:i:s', strtotime($dados['data_creacao']));
-            $dados['url'] = funcoes::Name($dados['nome']);
-
+           
             //Atualiza os dados.
             $updateCat = new update();
             $updateCat->ExeUpdate('categorias', $dados, "WHERE id = :id", "id={$id}");
@@ -305,10 +393,7 @@ switch ($dados['acao']) {
         else:
             //Apenas atualiza os dados.
             unset($dados['capa']);
-            //seta os dados
-            $dados['data_creacao'] = date('Y-m-d H:i:s', strtotime($dados['data_creacao']));
-            $dados['url'] = funcoes::Name($dados['nome']);
-
+            
             //Atualiza os dados.
             $updateCat = new update();
             $updateCat->ExeUpdate('categorias', $dados, "WHERE id = :id", "id={$id}");
@@ -366,7 +451,7 @@ switch ($dados['acao']) {
         endif;
         break;
 
-    /*     * ***************************************
+    /*****************************************
      * GESTÃO DE POSTS DO SITE cadastro_posts
      * **************************************** */
 
@@ -398,7 +483,7 @@ switch ($dados['acao']) {
     case 'post_update';
         sleep(1); //Ta dando um conflito, progresso do modal load.
         unset($dados['acao']);
-        
+      
         //Seta dados
         $dados['status'] = (!empty($dados['status']) ? $dados['status'] : 0);
         //htmlspecialchars_decode, tira todos os caracteris especiais passado pelo tinnymce.
@@ -432,7 +517,7 @@ switch ($dados['acao']) {
 
             //Atualiza a nova imagem.
             $uploadImagem = new files('../../uploads/');
-            $uploadImagem->enviarImagem($img, $idpost. '-' . time(), 0, 'posts');
+            $uploadImagem->enviarImagem($img, $idpost . '-' . time(), 0, 'posts');
 
             //Retorna o tipo de error, vindo do files.
             $dados['capa'] = $uploadImagem->getResultado();
@@ -442,49 +527,112 @@ switch ($dados['acao']) {
 
         //ENVIO DA GALERIA.
         $gb = ($_FILES['gb']['tmp_name'] ? $_FILES['gb'] : null);
-       
+
         if (isset($gb['tmp_name'])):
-           $galeria = new galeria();
-           $galeria->enviarGaleria($gb, $idpost);
+            $galeria = new galeria();
+            $galeria->enviarGaleria($gb, $idpost);
         endif;
         unset($dados['gb']);
-        
+
         //Atualiza os dados.
         $updaPost = new update();
-        $updaPost->ExeUpdate('posts',$dados,"WHERE id = :id","id={$idpost}");
+        $updaPost->ExeUpdate('posts', $dados, "WHERE id = :id", "id={$idpost}");
         break;
     case 'post_del_galeri':
-       $idgal = $dados['delimg'];
-       $galeriaDel = new galeria();
-       $galeriaDel->deleteGaleria($idgal);
-    break;
-    
+        $idgal = $dados['delimg'];
+        $galeriaDel = new galeria();
+        $galeriaDel->deleteGaleria($idgal);
+        break;
+
     case'post_delete':
-      unset($dados['acao']);
-    //id do post.        
-    $idpostdel = $dados['delpost'];
-    
-    //Deleta a galeria.
-    $delGaleria = new galeria();
-    $delGaleria->deleteGaleria($idpostdel);
-    
-    //Deleta a capa do post.
-    $readCapa = new read();
-    $readCapa->ExeRead('posts', "WHERE id = :id", "id={$idpostdel}");
-    $capa = '../../uploads/' . $readCapa->getResultado()[0]['capa'];
-    if (file_exists($capa) && !is_dir($capa)):
-        unlink($capa);
-    endif;
-    
-    //Deleta os camentarios.
-    $delComents = new delete();
-    $delComents->ExeDelete('comentarios',"WHERE id_post = :id","id={$idpostdel}");
-    
-    //Delera o post.
-    $delComents = new delete();
-    $delComents->ExeDelete('posts',"WHERE id = :id","id={$idpostdel}");
-    
-    break;
+        unset($dados['acao']);
+        //id do post.        
+        $idpostdel = $dados['delpost'];
+
+        //Deleta a galeria.
+        $delGaleria = new galeria();
+        $delGaleria->deleteGaleria($idpostdel);
+
+        //Deleta a capa do post.
+        $readCapa = new read();
+        $readCapa->ExeRead('posts', "WHERE id = :id", "id={$idpostdel}");
+        $capa = '../../uploads/' . $readCapa->getResultado()[0]['capa'];
+        if (file_exists($capa) && !is_dir($capa)):
+            unlink($capa);
+        endif;
+
+        //Deleta os camentarios.
+        $delComents = new delete();
+        $delComents->ExeDelete('comentarios', "WHERE id_post = :id", "id={$idpostdel}");
+
+        //Delera o post.
+        $delComents = new delete();
+        $delComents->ExeDelete('posts', "WHERE id = :id", "id={$idpostdel}");
+
+        break;
+        
+    case 'relatorio';
+        unset($dados['acao']);
+        //Data de incio da busca.
+        $inicio = explode('/', $dados['inicio']);
+        $inicio = $inicio['2'] . '-' . $inicio['1'] . '-' . $inicio['0'];
+
+        //Data de final da busca.
+        $final = explode('/', $dados['final']);
+        $final = $final['2'] . '-' . $final['1'] . '-' . $final['0'];
+
+        if (in_array('', $dados)):
+            echo 'campos_branco';
+        else:
+            //Faz a leitura.
+            $readRelatorio = new read();
+            $readRelatorio->ExeRead('siteviews', "WHERE data >= :inicio AND data <= :final", "inicio={$inicio}&final={$final}");
+            if ($readRelatorio->getResultado()):
+                echo'<li class="title">
+                <span class="date">Dia</span>
+                <span class="views">Visitas</span>
+                <span class="users">Usuários</span>
+                <span class="pages">PageViews</span>
+            </li>';
+                if ($readRelatorio->getResultado()):
+                    foreach ($readRelatorio->getResultado() as $resEstH):
+                        $i++;
+                        $resH = ($resEstH['pageviews'] / $resEstH['usuarios']);
+                        /**/
+                        echo'<li';
+                        if ($i % 2 == 0) echo ' class="color"';
+                        echo'>';
+                        echo'<span class="date"><strong>' . date('d-m-Y', strtotime($resEstH['data'])) . '</strong></span>';
+                        echo'<span class="views">' . $resEstH['visitas'] . '</span>';
+                        echo'<span class="users">' . $resEstH['usuarios'] . '</span>';
+                        echo'<span class="pages">' . ceil($resH) . '</span>';
+                        echo '</li>';
+
+                        //Somo os valores direto no loop, apenos dos sete primeiros.
+                        $resVisitasH += $resEstH['visitas'];
+                        $resUsusariosH += $resEstH['usuarios'];
+                        $resPageH += $resEstH['pageviews'];
+                    endforeach;
+                    $pagesH = ($resPageH / $resUsusariosH);
+                endif;
+
+                echo '<li class="title">
+                <span class="date">TOTAL</span>
+                    <span class="views">Visitas</span>
+                    <span class="users">Usuários</span>
+                    <span class="pages">PageViews</span>
+                </li>
+                <li>
+                    <span class="date"><strong>'.$readRelatorio->getRowCount().' DIAS</strong></span>
+                    <span class="views">' . $resVisitasH . '</span>
+                    <span class="users">' . $resUsusariosH . '</span>
+                    <span class="pages">' . ceil($pagesH) . '</span>
+                </li>';
+            else:
+                echo 'notfound';
+            endif;
+        endif;
+        break;
 
     //Default caso não aja case.
     default:

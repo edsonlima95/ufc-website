@@ -15,10 +15,11 @@
 .categorias ul li a:hover{color:#FFF;}
 .categorias ul li .licontent{padding:5px 10px 15px 10px;}
 
-.categorias .paginator{display:block; font-size:40px; font-weight:900; margin-bottom:20px; text-align:center;}
+.categorias .paginator {display:block; font-size:40px; font-weight:900; margin-bottom:20px; text-align:center;}
 .categorias .paginator a, .categorias .paginator .atv{text-decoration:none; color:#fff; margin:0 10px;}
 .categorias .paginator a:hover{border-bottom:5px solid #fff; border-top:5px solid #fff;}
 .categorias .paginator .atv{border-bottom:5px solid #000; border-top:5px solid #000; color:#000;}
+
 
 /*  ARTIGO  */
 .single{margin:80px 0 120px;}

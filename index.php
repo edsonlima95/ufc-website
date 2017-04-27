@@ -9,7 +9,7 @@ require_once './vendor/autoload.php';
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
+<?php getSeo();?>
 <link href="<?php setHome();?>/tpl/js/shadowbox/shadowbox.css" type="text/css" rel="stylesheet" />
 
 <link href="<?php setHome();?>/tpl/css/style.css" rel="stylesheet" type="text/css" />
@@ -23,6 +23,7 @@ require_once './vendor/autoload.php';
 <script type="text/javascript" src="<?php setHome();?>/jsc/jquery-cycle.js"></script>
 <script type="text/javascript" src="<?php setHome();?>/tpl/js/shadowbox/shadowbox.js"></script>
 <script type="text/javascript" src="<?php setHome();?>/tpl/js/estilos.js"></script>
+<!--<script type="text/javascript" src="<?php setHome();?>/tpl/js/jshome.js"></script>-->
 
 <?php
     getHome();

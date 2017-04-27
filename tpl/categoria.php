@@ -1,44 +1,20 @@
-<?php
-//IMAGEM
-$metaImage = ($metaImage != '' ? BASE.'/uploads/'.$metaImage : BASE.'/tpl/images/siteavatar.png');
-
-//SEO
-$metaInfo = array(
-	'title' 		=> SITENAME.' | Oppsss 404, não encontramos o que procura!',
-	'description' 	=> SITEDESC,
-	'url' 			=> BASE.'/404',
-	'image'			 => $metaImage
-);
-
-//NORMAL PAGE
-echo '<title>'.lmWord($metaInfo['title'],'70').'</title> ';
-echo '<meta name="description" content="'.lmWord($metaInfo['description'],'160').'"/>';
-
-//FACEBOOK
-echo '<meta property="og:title" content="'.$metaInfo['title'].'" />';
-echo '<meta property="og:url" content="'.$metaInfo['url'].'" />';
-echo '<meta property="og:image" content="'.$metaInfo['image'].'" />';
-echo '<meta property="og:site_name" content="'.SITENAME.'" />';
-echo '<meta property="og:description" content="'.$metaInfo['description'].'" />';
-echo '<meta property="og:locale" content="pt_BR" />';
-
-//ITEM GROUP (TWITTER)
-echo '<meta itemprop="name" content="'.$metaInfo['title'].'">';
-echo '<meta itemprop="description" content="'.$metaInfo['description'].'">';
-echo '<meta itemprop="url" content="'.$metaInfo['url'].'">';
-
-//ROBOS AND FALLOW
-echo '<meta name="robots" content="index, follow" />';
-echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
-?>
 </head>
 
 <!--body -->
 <body>
 
 <?php 
-	setArq('tpl/sidebars/modais');
-	setArq('tpl/sidebars/pgheader');	
+    setArq('tpl/sidebars/pgheader');	
+    
+    //Pega o nome da categoria, e faz a leitura.
+    $nomeCat = $url[1];
+    
+    $readCategoria = new read();
+    $readCategoria->ExeRead('categorias',"WHERE url = :url","url={$nomeCat}");
+    $resul = $readCategoria->getResultado()[0];
+    //Cria uma sessao com id da categoria para ser pego no case 
+    $_SESSION['catid']['id'] = $resul['id'];
+    $_SESSION['catid']['url'] = $resul['url'];
 ?> 
   
 <!-- BLOCO SITE GERAL HOME -->
@@ -48,37 +24,54 @@ echo '<link rel="canonical" href="'.$metaInfo['url'].'">';
 <!-- BLOCO UM - h1. h2. Img Topo -->
 <div class="bloco_um">
 
-    <h1>Categoria!</h1>
-    <h2>Veja aqui artigos relacionados a categoria listada neste. Conteúdo de primeira você encontra aqui no <?php SITENAME;?></h2>
+    <h1><?= ucfirst($resul['nome']) ?></h1>
+    <h2><?= $resul['descricao']?></h2>
 
     <div class="capa">
-       	<img src="<?php setHome();?>/tpl/_tmp/categoria.png" />
+       	<img src="<?= setHome().'/tim.php?src=uploads/'.$resul['capa'].''?>&w=200&h=200" />
     </div><!-- /capa -->
         
 </div><!-- /BLOCO UM -->
 <div class="clear"></div><!-- /clear -->
 
-<div class="categorias">
-    
-    <ul>
-		<?php for($i=1;$i<=12;$i++):?>
+<div class="categorias j_catpag">
+        <?php 
+         
+        //Paginacao.
+        $page = (isset($url[2]) ? $url[2] : 1);
+        $paginacao = new paginacao('http://localhost/proJquery/projeto/categoria/'.$resul['url'].'/');
+        $paginacao->pagina($page, 5);
+        
+        $readPostCat = clone $readCategoria;
+        $readPostCat->ExeRead('posts',"WHERE sub_categoria = :idcat LIMIT :limit OFFSET :offset","idcat={$resul['id']}&limit={$paginacao->getLimit()}&offset={$paginacao->getOffset()}");
+        if($readPostCat->getResultado()):
+        echo '<ul>';
+        foreach ($readPostCat->getResultado() as $resPost):
+            extract($resPost);
+        $i++;
+        ?>
         <li<?php if($i%4==0) echo ' style="float:right; margin-right:0"';?>>
-            <img src="<?php setHome();?>/tpl/_tmp/04.png" width="220" />
-            <div class="licontent">
-                <a href="<?php setHome();?>/ver">SHAEL SONNEN X SPIDDER, QUEM LEVA?</a>
+            	<img src="<?= setHome().'/tim.php?src=uploads/'.$capa.''?>&w=220&h=150" />
+                <div class="licontent">
+                <a href="<?= setHome().'/ver/'.$nome.''?>"><?=$titulo?></a>
             </div><!-- /content -->
         </li>
-        <?php endfor;?>    
-    </ul>
+        <?php 
+        endforeach;
+        echo '</ul>';
+        else:
+            $paginacao->retornaPagina();
+        endif;
+    
+        ?>   
     
     <div class="clear"></div><!-- /clear -->
     
     <div class="paginator">
-        <a href="#">Primeira</a>
-        <span class="atv">1</span>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">Última</a>
+        <?php
+        $paginacao->paginacao('posts',"WHERE sub_categoria = :idcat","idcat={$resul['id']}");
+        echo $paginacao->paginator();
+        ?>
     </div><!-- /paginator -->
     
 </div><!--/categorias-->

@@ -1,25 +1,25 @@
 <div class="dialog">
 
-	<div class="msg accept">
-    	<strong class="tt">Sucesso:</strong>
+    <div class="msg accept">
+        <strong class="tt">Sucesso:</strong>
         <p>Parabéns. Seus dados foram enviados com sucesso. Estaremos respondendo em breve.</p><p><strong>Obrigado!</strong></p>
-    	<a href="#" class="closedial">X FECHAR</a>
+        <a href="#" class="closedial">X FECHAR</a>
     </div><!-- msg -->
-    
 
-	<div class="msg alert">
-    	<strong class="tt">Aviso:</strong>
+
+    <div class="msg alert">
+        <strong class="tt">Aviso:</strong>
         <p>Opsss. Para enviar é preciso preencher todos os campos!</p>
-    	<a href="#" class="closedial">X FECHAR</a>
+        <a href="#" class="closedial">X FECHAR</a>
     </div><!-- msg -->
 
 
-	<div class="msg error">
-    	<strong class="tt">Erro:</strong>
+    <div class="msg error">
+        <strong class="tt">Erro:</strong>
         <p>Opsss. Não foi possível processar sua requisição</p>
-    	<a href="#" class="closedial">X FECHAR</a>
+        <a href="#" class="closedial">X FECHAR</a>
     </div><!-- msg -->
-    
+
 </div><!-- /dialog -->
 
 <div class="contato">
@@ -43,12 +43,12 @@
             <textarea name="mens" rows="3"></textarea>
         </label>
         <input type="submit" value="Enviar Contato" class="btn" />
-        <img class="imgload" src="<?php setHome();?>/tpl/images/loader2.gif" alt="Carregando..." title="Carregando...">
-        
-    <div class="clear"></div>
+        <img class="imgload" src="<?php setHome(); ?>/tpl/images/loader2.gif" alt="Carregando..." title="Carregando...">
+
+        <div class="clear"></div>
     </form>
-            
-<a href="#" class="closecontato">FECHAR</a>
+
+    <a href="#" class="closecontato">FECHAR</a>
 </div><!-- /contato -->
 
 

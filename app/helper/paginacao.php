@@ -93,21 +93,19 @@ class paginacao {
             $paginas = ceil($this->rows / $this->limit);
             $maxlinks = $this->maxlinks;
             //HTML
-            $this->paginator = '<ul class="">'; //Abri a paginacao
-            $this->paginator .= "<li><a title=\"{$this->first}\" href=\"{$this->link}1\">{$this->first}</a></li>"; //PRIMEIRA PAG
+            $this->paginator .= "<a title=\"{$this->first}\" href=\"{$this->link}1\">{$this->first}</a>"; //PRIMEIRA PAG
             for ($ipag = $this->page - $maxlinks; $ipag <= $this->page - 1; $ipag ++):
                 if ($ipag >= 1)://So exibe os numero positivos.
-                    $this->paginator .= "<li><a title=\"Pagina {$ipag}\" href=\"{$this->link}{$ipag}\">{$ipag}</a></li>";
+                    $this->paginator .= "<a title=\"Pagina {$ipag}\" href=\"{$this->link}{$ipag}\">{$ipag}</a>";
                 endif;
             endfor;
-            $this->paginator .= "<li class=\"atv\"><span>{$this->page}</span></li>"; //PAGINA ATUAL. 
+            $this->paginator .= "<a class=\"atv\"><span>{$this->page}</span></a>"; //PAGINA ATUAL. 
             for ($dpag = $this->page + 1; $dpag <= $this->page + $maxlinks; $dpag ++):
                 if ($dpag <= $paginas):
-                    $this->paginator .= "<li><a title=\"Pagina {$dpag}\" href=\"{$this->link}{$dpag}\">{$dpag}</a></li>";
+                    $this->paginator .= "<a title=\"Pagina {$dpag}\" href=\"{$this->link}{$dpag}\">{$dpag}</a>";
                 endif;
             endfor;
-            $this->paginator .= "<li><a title=\"{$this->last}\" href=\"{$this->link}{$paginas}\">{$this->last}</a></li>"; //ULTIMA PAG.
-            $this->paginator .= '</ul>'; //Fecha a paginaçao
+            $this->paginator .= "<a title=\"{$this->last}\" href=\"{$this->link}{$paginas}\">{$this->last}</a>"; //ULTIMA PAG.
         endif;
     }
 
