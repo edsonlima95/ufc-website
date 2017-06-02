@@ -212,7 +212,7 @@
 .configs form .load{float:left; margin:26px 0 0 16px; display: none}
 
 table.temas {padding: 20px; background: #fbfbfb; margin-bottom: 20px; width: 960px; border-collapse: collapse;}
-table.temas tr th {width 916px; background: #069;  border: 3px solid #069; color: #fff; border-top: none}
+table.temas tr th {width: 916px; background: #069;  border: 3px solid #069; color: #fff; border-top: none}
 table.temas tr td {border: 3px solid #069; padding: 10px; font-size: 16px; text-align: center}
 table.temas tr:hover {background: #069; color: #fff}
 table.temas tr td a {padding: 5px 8px; color: #09F; font-weight: 600; background: #fff; text-decoration: none}
